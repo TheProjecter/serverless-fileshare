@@ -48,30 +48,14 @@ namespace serverless_fileshare
 
             while (_keepListening)
             {
-                try
-                {
 
-                    if (!_listener.Pending())
-                    {
-                        Thread.Sleep(500); // choose a number (in milliseconds) that makes sense
-                        continue; // skip to next iteration of loop
-                    }
+                //blocks until a client has connected to the server
+                TcpClient client = _listener.AcceptTcpClient();
 
-                    // Get client's request and process it for web request.
-                    ProcessRequest();
-
-                }
-                catch (SocketException e)
-                {
-                    // Listener Error.
-
-                }
-
-                catch (InvalidOperationException er)
-                {
-
-
-                }
+                //create a thread to handle communication 
+                //with connected client
+                Thread clientThread = new Thread(new ParameterizedThreadStart(ProcessRequest));
+                clientThread.Start(client);
             }
 
             _listener.Stop();
@@ -88,9 +72,46 @@ namespace serverless_fileshare
         /// <summary>
         /// Go though the listener and decied what the request is and begin/continue transfer if needed
         /// </summary>
-        public void ProcessRequest()
+        public void ProcessRequest(object client)
         {
-            throw new Exception("PortListener.ProcessRequst() not implemented");
+            TcpClient tcpClient = (TcpClient)client;
+            NetworkStream clientStream = tcpClient.GetStream();
+
+            //TODO: Define a chunk size... 4Kb packets isn't much...
+            byte[] message = new byte[4096];
+            int bytesRead;
+
+            while (true)
+            {
+                bytesRead = 0;
+
+                try
+                {
+                    //blocks until a client sends a message
+                    bytesRead = clientStream.Read(message, 0, 4096);
+                }
+                catch
+                {
+                    //a socket error has occured
+                    break;
+                }
+
+                if (bytesRead == 0)
+                {
+                    //the client has disconnected from the server
+                    break;
+                }
+
+                //message has successfully been received
+                //TODO: Here we need to parse the filetransactionID from the message and then retrieve
+                //      the rest of the data and write it out to the defined file.
+                throw new Exception("Message Received: But parse code is incomplete");
+
+                //ASCIIEncoding encoder = new ASCIIEncoding();
+                //System.Diagnostics.Debug.WriteLine(encoder.GetString(message, 0, bytesRead));
+            }
+
+            tcpClient.Close();
         }
     }
 
