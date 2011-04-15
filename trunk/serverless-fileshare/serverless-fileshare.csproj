@@ -52,8 +52,9 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="MovingTCPScheduler.cs" />
     <Compile Include="PortListener.cs" />
-    <Compile Include="PortScheduler.cs" />
+    <Compile Include="PortFinder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
