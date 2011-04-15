@@ -34,5 +34,14 @@ namespace serverless_fileshare.Properties {
                 this["MaxIncomingConnections"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
+        public int PortChangeInterval {
+            get {
+                return ((int)(this["PortChangeInterval"]));
+            }
+        }
     }
 }

@@ -14,6 +14,8 @@ namespace serverless_fileshare
         public Form1()
         {
             InitializeComponent();
+            MovingTCPScheduler scheduler = new MovingTCPScheduler();
+            
         }
     }
 }

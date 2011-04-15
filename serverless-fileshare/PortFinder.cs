@@ -8,10 +8,10 @@ namespace serverless_fileshare
     /// <summary>
     /// Keeps track of the port changing algorithm. 
     /// </summary>
-    class PortScheduler
+    class PortFinder
     {
         int currentPort;
-        public PortScheduler()
+        public PortFinder()
         {
             currentPort = 90;
             //TODO: Implement algorithm
