@@ -15,4 +15,4 @@ If the first 8 bytes are CONTFILE then it means "Continue File Transfer." If thi
 
 
 (8 bytes) (4096 bytes)
-  HEADER      DATA
+  (HEADER)  (DATA)
