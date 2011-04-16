@@ -6,7 +6,7 @@
 They packet for now is 8Byte header + 4096 bytes of data. Making the whole packet 4014 bytes.  Data size may need to be adjusted for speed.
 
 First 8 bytes are the header in ASCII which define what type of packet it is. 
-   *CONTFILE*
+   CONTFILE
 If the first 8 bytes are CONTFILE then it means "Continue File Transfer." If this is then:
       First Byte=FileID
       Rest of bytes=raw file data
@@ -14,5 +14,5 @@ If the first 8 bytes are CONTFILE then it means "Continue File Transfer." If thi
 
 
 
-[8 bytes] [ 4096 bytes]
+(8 bytes) (4096 bytes)
   HEADER      DATA
