@@ -11,8 +11,7 @@ namespace serverless_fileshare
     class PortListener
     {
         public static TcpListener _listener;
-        private static TcpClient _client;
-        private static NetworkStream _clientStream;
+        private static int _messageSize = 8 + 4096;
         private IPAddress _localIp;
         private int _port;
         private Boolean _keepListening;
@@ -77,7 +76,7 @@ namespace serverless_fileshare
             NetworkStream clientStream = tcpClient.GetStream();
 
             //TODO: Define a chunk size... 4Kb packets isn't much...
-            byte[] message = new byte[4096];
+            byte[] message = new byte[_messageSize];
             int bytesRead;
 
             while (true)
@@ -87,7 +86,7 @@ namespace serverless_fileshare
                 try
                 {
                     //blocks until a client sends a message
-                    bytesRead = clientStream.Read(message, 0, 4096);
+                    bytesRead = clientStream.Read(message, 0, _messageSize);
                 }
                 catch
                 {
@@ -104,10 +103,7 @@ namespace serverless_fileshare
                 //message has successfully been received
                 //TODO: Here we need to parse the filetransactionID from the message and then retrieve
                 //      the rest of the data and write it out to the defined file.
-                throw new Exception("Message Received: But parse code is incomplete");
-
-                //ASCIIEncoding encoder = new ASCIIEncoding();
-                //System.Diagnostics.Debug.WriteLine(encoder.GetString(message, 0, bytesRead));
+                SFPacket packet = new SFPacket(message);
             }
 
             tcpClient.Close();

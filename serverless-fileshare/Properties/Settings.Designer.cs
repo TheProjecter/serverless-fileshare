@@ -43,5 +43,17 @@ namespace serverless_fileshare.Properties {
                 return ((int)(this["PortChangeInterval"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\TestLoc")]
+        public string SaveDestination {
+            get {
+                return ((string)(this["SaveDestination"]));
+            }
+            set {
+                this["SaveDestination"] = value;
+            }
+        }
     }
 }
