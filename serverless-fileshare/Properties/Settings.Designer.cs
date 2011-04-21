@@ -55,5 +55,14 @@ namespace serverless_fileshare.Properties {
                 this["SaveDestination"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4096")]
+        public int PacketDataSize {
+            get {
+                return ((int)(this["PacketDataSize"]));
+            }
+        }
     }
 }

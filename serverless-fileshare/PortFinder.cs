@@ -32,7 +32,7 @@ namespace serverless_fileshare
         /// <returns>next port number to use</returns>
         public int GetNextPort()
         {
-            return currentPort;
+            return currentPort+1;
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace serverless_fileshare
         /// <returns>previous port number</returns>
         public int GetPreviousPort()
         {
-            return currentPort;
+            return currentPort+2;
         }
 
     }

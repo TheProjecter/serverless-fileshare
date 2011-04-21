@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using System.Net;
+using System.Net.Sockets;
 
 namespace serverless_fileshare
 {
@@ -23,7 +24,7 @@ namespace serverless_fileshare
 
         public void Start()
         {
-            _portChangeClock.Start();
+           // _portChangeClock.Start();
             UpdateListeners();
         }
 
@@ -31,6 +32,16 @@ namespace serverless_fileshare
         {
             _portChangeClock.Stop();
             StopListeners();
+        }
+
+        public void SendPacket(SFPacket packet, IPAddress destination)
+        {
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            
+            IPEndPoint destip = new IPEndPoint(destination, _portFinder.GetCurrentPort());
+            socket.Connect(destip);
+            socket.Send(packet.GetRawPacket(),packet.GetRawPacket().Length, SocketFlags.None);
+            socket.Close();
         }
 
 
@@ -63,7 +74,8 @@ namespace serverless_fileshare
         {
             foreach (PortListener listener in _portListeners)
             {
-                listener.Stop();
+                if(listener!=null)
+                    listener.Stop();
             }
         }
     }
