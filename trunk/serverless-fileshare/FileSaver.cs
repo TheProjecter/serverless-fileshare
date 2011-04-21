@@ -20,14 +20,14 @@ namespace serverless_fileshare
             int fileID=data[0];
             String fileLoc=GetFileLoc(fileID);
             FileStream fs = new FileStream(fileLoc, FileMode.Append); 
-            fs.Write(data,1, data.Length);
+            fs.Write(data,1, data.Length-1);
             fs.Close();
         }
 
         private String GetFileLoc(int fileID)
         {
             //TODO: look up fileloc in DB
-            return "testFile.txt";
+            return @"C:\testFile.txt";
         }
         
     }

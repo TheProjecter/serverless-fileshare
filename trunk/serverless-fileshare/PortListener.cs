@@ -10,8 +10,6 @@ namespace serverless_fileshare
 {
     class PortListener
     {
-        public static TcpListener _listener;
-        private static int _messageSize = 8 + 4096;
         private IPAddress _localIp;
         private int _port;
         private Boolean _keepListening;
@@ -29,7 +27,6 @@ namespace serverless_fileshare
 
 
             // Set the TcpListener IP & Port.
-            _listener = new TcpListener(ip, port);
             _localIp = ip;
             _port = port;
         }
@@ -38,7 +35,16 @@ namespace serverless_fileshare
         /// Starts the listener on a new thread
         /// </summary>
         public void Start()          // Run this on a separate thread
-        {                            
+        {
+            ThreadStart ts = new ThreadStart(threadedStart);
+            Thread td = new Thread(ts);
+            td.Start();
+
+        }
+        private void threadedStart()
+        {
+            TcpListener _listener = new TcpListener(_localIp, _port);
+            _keepListening = true;
             _listener.Start();
 
             Console.WriteLine("Starting server...\n");
@@ -57,9 +63,7 @@ namespace serverless_fileshare
             }
 
             _listener.Stop();
-
         }
-
         public void Stop()
         {
             _keepListening = false;
@@ -72,11 +76,12 @@ namespace serverless_fileshare
         /// </summary>
         public void ProcessRequest(object client)
         {
+            int msgSize = 8 + Properties.Settings.Default.PacketDataSize;
             TcpClient tcpClient = (TcpClient)client;
             NetworkStream clientStream = tcpClient.GetStream();
 
             //TODO: Define a chunk size... 4Kb packets isn't much...
-            byte[] message = new byte[_messageSize];
+            byte[] message = new byte[msgSize];
             int bytesRead;
 
             while (true)
@@ -86,7 +91,7 @@ namespace serverless_fileshare
                 try
                 {
                     //blocks until a client sends a message
-                    bytesRead = clientStream.Read(message, 0, _messageSize);
+                    bytesRead = clientStream.Read(message, 0, msgSize);
                 }
                 catch
                 {
@@ -104,6 +109,8 @@ namespace serverless_fileshare
                 //TODO: Here we need to parse the filetransactionID from the message and then retrieve
                 //      the rest of the data and write it out to the defined file.
                 SFPacket packet = new SFPacket(message);
+                PacketSorter sorter = new PacketSorter();
+                sorter.SortPacket(packet);
             }
 
             tcpClient.Close();

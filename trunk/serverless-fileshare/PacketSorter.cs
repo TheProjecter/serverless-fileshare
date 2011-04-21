@@ -18,7 +18,7 @@ namespace serverless_fileshare
         {
             switch(incomingPacket.GetPacketType())
             {
-                case SFPacketType.IncomingFileTransfer:
+                case SFPacketType.FileTransfer:
                     _fileSaver.SavePacket(incomingPacket.GetPacketData());
                     break;
             }

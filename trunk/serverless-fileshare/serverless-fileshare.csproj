@@ -54,6 +54,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="MovingTCPScheduler.cs" />
+    <Compile Include="OutboundManager.cs" />
     <Compile Include="PacketSorter.cs" />
     <Compile Include="PendingFile.cs" />
     <Compile Include="PendingFileTransferDB.cs" />
@@ -63,6 +64,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SFPacket.cs" />
     <Compile Include="SFPacketType.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
