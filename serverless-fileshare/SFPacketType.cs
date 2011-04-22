@@ -7,6 +7,6 @@ namespace serverless_fileshare
 {
     static class SFPacketType
     {
-        public const String FileTransfer = "CONTFILE";
+        public const int FileTransfer = 0;
     }
 }
