@@ -13,6 +13,7 @@ namespace serverless_fileshare
         private IPAddress _localIp;
         private int _port;
         private Boolean _keepListening;
+        private PacketSorter _sorter;
         /// <summary>
         /// Create the port listener object
         /// </summary>
@@ -29,6 +30,7 @@ namespace serverless_fileshare
             // Set the TcpListener IP & Port.
             _localIp = ip;
             _port = port;
+            _sorter = new PacketSorter();
         }
 
         /// <summary>
@@ -58,8 +60,9 @@ namespace serverless_fileshare
 
                 //create a thread to handle communication 
                 //with connected client
-                Thread clientThread = new Thread(new ParameterizedThreadStart(ProcessRequest));
-                clientThread.Start(client);
+                ProcessRequest(client);
+                //Thread clientThread = new Thread(new ParameterizedThreadStart(ProcessRequest));
+                //clientThread.Start(client);
             }
 
             _listener.Stop();
@@ -76,7 +79,7 @@ namespace serverless_fileshare
         /// </summary>
         public void ProcessRequest(object client)
         {
-            int msgSize = 8 + Properties.Settings.Default.PacketDataSize;
+            int msgSize = 1 + Properties.Settings.Default.PacketDataSize;
             TcpClient tcpClient = (TcpClient)client;
             NetworkStream clientStream = tcpClient.GetStream();
 
@@ -109,8 +112,7 @@ namespace serverless_fileshare
                 //TODO: Here we need to parse the filetransactionID from the message and then retrieve
                 //      the rest of the data and write it out to the defined file.
                 SFPacket packet = new SFPacket(message);
-                PacketSorter sorter = new PacketSorter();
-                sorter.SortPacket(packet);
+                _sorter.SortPacket(packet);
             }
 
             tcpClient.Close();

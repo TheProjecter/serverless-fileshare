@@ -57,6 +57,7 @@
     <Compile Include="OutboundManager.cs" />
     <Compile Include="PacketSorter.cs" />
     <Compile Include="PendingFile.cs" />
+    <Compile Include="PendingFileQueue.cs" />
     <Compile Include="PendingFileTransferDB.cs" />
     <Compile Include="PortListener.cs" />
     <Compile Include="PortFinder.cs" />

@@ -5,6 +5,7 @@ using System.Text;
 
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace serverless_fileshare
 {
@@ -41,6 +42,7 @@ namespace serverless_fileshare
             IPEndPoint destip = new IPEndPoint(destination, _portFinder.GetCurrentPort());
             socket.Connect(destip);
             socket.Send(packet.GetRawPacket(),packet.GetRawPacket().Length, SocketFlags.None);
+            Thread.Sleep(100);
             socket.Close();
         }
 

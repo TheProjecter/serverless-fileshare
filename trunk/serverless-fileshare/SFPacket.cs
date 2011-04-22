@@ -7,7 +7,7 @@ namespace serverless_fileshare
 {
     class SFPacket
     {
-        String _type;
+        int _type;
         byte[] _data;
         public SFPacket(byte[] message)
         {
@@ -15,13 +15,13 @@ namespace serverless_fileshare
             this._data = GrabData(message);
         }
 
-        public SFPacket(String PacketType, byte[] sentData)
+        public SFPacket(int PacketType, byte[] sentData)
         {
             _type = PacketType;
             _data = sentData;
         }
         
-        public String GetPacketType()
+        public int GetPacketType()
         {
             return _type;
         }
@@ -33,37 +33,28 @@ namespace serverless_fileshare
 
         public byte[] GetRawPacket()
         {
-            byte[] total = new byte[_data.Length + 8];
+            byte[] total = new byte[_data.Length + 1];
             int x=0;
-            foreach (byte b in _type)
+            total[0] =(byte) _type;
+            for (x = 1; x < _data.Length; x++)
             {
-                total[x] = b;
-                x++; 
-            }
-            for (x = 8; x < _data.Length; x++)
-            {
-                total[x] = _data[x];
+                total[x] = _data[x-1];
             }
             return total;
         }
 
-        private String GrabType(byte[] message)
+        private int GrabType(byte[] message)
         {
-            byte[] typeBytes = new byte[8];
-            for (int x = 0; x < 8; x++)
-            {
-                typeBytes[x] = message[x];
-            }
-            ASCIIEncoding encoder = new ASCIIEncoding();
-            return encoder.GetString(typeBytes);
+
+            return (int)message[0];
         }
 
         private byte[] GrabData(byte[] message)
         {
-            byte[] workingBytes = new byte[message.Length-8];
-            for (int x = 8; x < message.Length-8; x++)
+            byte[] workingBytes = new byte[message.Length-1];
+            for (int x = 0; x < workingBytes.Length; x++)
             {
-                workingBytes[x] = message[x];
+                workingBytes[x] = message[x+1];
             }
             return workingBytes;
         }
