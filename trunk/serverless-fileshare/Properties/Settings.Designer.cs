@@ -58,7 +58,7 @@ namespace serverless_fileshare.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("4096")]
+        [global::System.Configuration.DefaultSettingValueAttribute("131072")]
         public int PacketDataSize {
             get {
                 return ((int)(this["PacketDataSize"]));
