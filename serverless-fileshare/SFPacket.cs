@@ -9,10 +9,10 @@ namespace serverless_fileshare
     {
         int _type;
         byte[] _data;
-        public SFPacket(byte[] message)
+        public SFPacket(byte[] message,int messageSize)
         {
             this._type = GrabType(message);
-            this._data = GrabData(message);
+            this._data = GrabData(message,messageSize);
         }
 
         public SFPacket(int PacketType, byte[] sentData)
@@ -36,7 +36,7 @@ namespace serverless_fileshare
             byte[] total = new byte[_data.Length + 1];
             int x=0;
             total[0] =(byte) _type;
-            for (x = 1; x < _data.Length; x++)
+            for (x = 1; x < _data.Length+1; x++)
             {
                 total[x] = _data[x-1];
             }
@@ -49,9 +49,9 @@ namespace serverless_fileshare
             return (int)message[0];
         }
 
-        private byte[] GrabData(byte[] message)
+        private byte[] GrabData(byte[] message,int messageSize)
         {
-            byte[] workingBytes = new byte[message.Length-1];
+            byte[] workingBytes = new byte[messageSize-1];
             for (int x = 0; x < workingBytes.Length; x++)
             {
                 workingBytes[x] = message[x+1];

@@ -87,7 +87,7 @@ namespace serverless_fileshare
             byte[] message = new byte[msgSize];
             int bytesRead;
 
-            while (true)
+            while (_keepListening)
             {
                 bytesRead = 0;
 
@@ -111,7 +111,7 @@ namespace serverless_fileshare
                 //message has successfully been received
                 //TODO: Here we need to parse the filetransactionID from the message and then retrieve
                 //      the rest of the data and write it out to the defined file.
-                SFPacket packet = new SFPacket(message);
+                SFPacket packet = new SFPacket(message,bytesRead);
                 _sorter.SortPacket(packet);
             }
 

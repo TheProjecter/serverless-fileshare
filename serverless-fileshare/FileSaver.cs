@@ -42,7 +42,7 @@ namespace serverless_fileshare
         private String GetFileLoc(int fileID)
         {
             //TODO: look up fileloc in DB
-            return @"C:\Test\received.txt";
+            return @"C:\Test\received.wma";
         }
         
     }
