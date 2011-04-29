@@ -36,13 +36,14 @@ namespace serverless_fileshare
             else
             {
                 PendingFileQueue pfq = new PendingFileQueue(data,fileID,GetFileLoc(fileID));
+                pendingFileQueue.Add(fileID, pfq);
             }
         }
 
         private String GetFileLoc(int fileID)
         {
             //TODO: look up fileloc in DB
-            return @"C:\Test\received.wma";
+            return @"C:\Test\received.mp3";
         }
         
     }

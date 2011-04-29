@@ -14,6 +14,8 @@ namespace serverless_fileshare
         private int _port;
         private Boolean _keepListening;
         private PacketSorter _sorter;
+
+        int packetsReceived = 0;
         /// <summary>
         /// Create the port listener object
         /// </summary>
@@ -85,35 +87,35 @@ namespace serverless_fileshare
 
             //TODO: Define a chunk size... 4Kb packets isn't much...
             byte[] message = new byte[msgSize];
-            int bytesRead;
+            int bytesRead=0;
 
-            while (_keepListening)
+            while (bytesRead<Properties.Settings.Default.PacketDataSize)
             {
-                bytesRead = 0;
-
+                int bytesReadThisTime = 0;
                 try
                 {
                     //blocks until a client sends a message
-                    bytesRead = clientStream.Read(message, 0, msgSize);
+                    bytesReadThisTime= clientStream.Read(message,bytesRead, msgSize-(bytesRead));
+                    bytesRead += bytesReadThisTime;
                 }
-                catch
+                catch(Exception ex)
                 {
+                    throw ex;
                     //a socket error has occured
                     break;
                 }
 
-                if (bytesRead == 0)
+                if (bytesReadThisTime == 0)
                 {
                     //the client has disconnected from the server
                     break;
                 }
 
-                //message has successfully been received
-                //TODO: Here we need to parse the filetransactionID from the message and then retrieve
-                //      the rest of the data and write it out to the defined file.
-                SFPacket packet = new SFPacket(message,bytesRead);
-                _sorter.SortPacket(packet);
             }
+            SFPacket packet = new SFPacket(message, bytesRead);
+            packetsReceived++;
+            _sorter.SortPacket(packet);
+            Console.WriteLine("Received: " + bytesRead);
 
             tcpClient.Close();
         }
