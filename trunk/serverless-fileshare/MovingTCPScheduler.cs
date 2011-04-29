@@ -41,8 +41,19 @@ namespace serverless_fileshare
             
             IPEndPoint destip = new IPEndPoint(destination, _portFinder.GetCurrentPort());
             socket.Connect(destip);
-            socket.Send(packet.GetRawPacket(),packet.GetRawPacket().Length, SocketFlags.None);
-            Thread.Sleep(100);
+            socket.SendTimeout = 0;
+            byte[] toSend = packet.GetRawPacket();
+            Console.WriteLine("Sending: " + toSend.Length);
+            int total = 0;
+            int size = toSend.Length;
+            int dataleft = size;
+            int sent;
+            while (total < size)
+            {
+                sent = socket.Send(toSend, total, dataleft, SocketFlags.None);
+                total += sent;
+                dataleft -= sent;
+            }
             socket.Close();
         }
 

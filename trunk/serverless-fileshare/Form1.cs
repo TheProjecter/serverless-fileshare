@@ -26,7 +26,7 @@ namespace serverless_fileshare
         {
             try
             {
-                outbound.SendFile(0, @"C:\Test\TestFile.wma", IPAddress.Parse("172.16.1.100"));
+                outbound.SendFile(0, @"C:\Test\holiday.mp3", IPAddress.Parse("172.16.1.100"));
             }
             catch (Exception ex)
             {
