@@ -10,10 +10,12 @@ namespace serverless_fileshare
     class FileSaver
     {
         PendingFileTransferDB _pendingFileTransferDB;
-        
+        MyFilesDB _myFiles;
         Hashtable pendingFileQueue;
-        public FileSaver()
+        public FileSaver(MyFilesDB myFiles)
         {
+            _myFiles = myFiles;
+
             //TODO: Load pendingFileTransfers from DB
             _pendingFileTransferDB = new PendingFileTransferDB();
             pendingFileQueue = new Hashtable();

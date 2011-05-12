@@ -37,24 +37,32 @@ namespace serverless_fileshare
 
         public void SendPacket(SFPacket packet, IPAddress destination)
         {
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            
-            IPEndPoint destip = new IPEndPoint(destination, _portFinder.GetCurrentPort());
-            socket.Connect(destip);
-            socket.SendTimeout = 0;
-            byte[] toSend = packet.GetRawPacket();
-            Console.WriteLine("Sending: " + toSend.Length);
-            int total = 0;
-            int size = toSend.Length;
-            int dataleft = size;
-            int sent;
-            while (total < size)
+            try
             {
-                sent = socket.Send(toSend, total, dataleft, SocketFlags.None);
-                total += sent;
-                dataleft -= sent;
+                Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                IPEndPoint destip = new IPEndPoint(destination, _portFinder.GetCurrentPort());
+                socket.Connect(destip);
+                socket.SendTimeout = 0;
+                byte[] toSend = packet.GetRawPacket();
+                Console.WriteLine("Sending: " + toSend.Length);
+                int total = 0;
+                int size = toSend.Length;
+                int dataleft = size;
+                int sent;
+                while (total < size)
+                {
+                    sent = socket.Send(toSend, total, dataleft, SocketFlags.None);
+                    total += sent;
+                    dataleft -= sent;
+                }
+                socket.Close();
             }
-            socket.Close();
+            catch (Exception ex)
+            {
+                //TODO: Keep track of when to quit retrying send. Otherwise if  person goes offline this will run forever.
+                Thread.Sleep(50);
+                SendPacket(packet, destination);
+            }
         }
 
 
