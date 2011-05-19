@@ -21,7 +21,7 @@ namespace serverless_fileshare
         /// </summary>
         /// <param name="ip">Local IP address</param>
         /// <param name="port">Port number to listen on</param>
-        public PortListener(IPAddress ip, Int32 port)
+        public PortListener(IPAddress ip, Int32 port,PacketSorter sorter)
         {
             int maxConnections=Properties.Settings.Default.MaxIncomingConnections;
             ThreadPool.SetMaxThreads(maxConnections, 
@@ -32,7 +32,7 @@ namespace serverless_fileshare
             // Set the TcpListener IP & Port.
             _localIp = ip;
             _port = port;
-            _sorter = new PacketSorter();
+            _sorter = sorter;
         }
 
         /// <summary>

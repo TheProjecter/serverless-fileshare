@@ -8,6 +8,7 @@ using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using System.Collections;
+using System.Runtime.Serialization.Formatters.Binary;
 namespace serverless_fileshare
 {
     class OutboundManager
@@ -25,11 +26,6 @@ namespace serverless_fileshare
             Thread td = new Thread(ts);
             object[] obj = {fileID, file, destination };
             td.Start(obj);
-        }
-
-        public void SendFileList(ArrayList files)
-        {
-
         }
 
         private void ThreadedSendFile(object parameters)
@@ -93,6 +89,33 @@ namespace serverless_fileshare
                 toReturn[x] = data[x-1];
             }
             return toReturn;
+        }
+
+
+
+        public void SendFileList(ArrayList files)
+        {
+            //TODO: Well crap. This needs to split an arraylist into multiple packets (if its huge). And if that happens 
+            //then i'm really screwed because I have to put them back together as one arraylist... Lets make the packet
+            //size big enough to allow for a good sized arraylist and drop the rest after that...
+        }
+
+        public void SendSearchRequest(String query, IPAddress dest)
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            byte[] bytes;
+            MemoryStream ms = new MemoryStream();
+            bf.Serialize(ms, query);
+            bytes = ms.ToArray();
+            if (bytes.Length < Properties.Settings.Default.PacketDataSize)
+            {
+                SFPacket packet = new SFPacket(SFPacketType.SearchForFile, bytes);
+                _scheduler.SendPacket(packet, dest);
+            }
+            else
+            {
+                throw new Exception("Search Request data size is too large for one packet: " + query);
+            }
         }
     }
 }

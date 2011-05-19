@@ -12,11 +12,11 @@ namespace serverless_fileshare
         MyFilesDB _myFiles;
         OutboundManager _outBoundManager;
 
-        public PacketSorter(MyFilesDB myFiles)
+        public PacketSorter(MyFilesDB myFiles,MovingTCPScheduler scheduler)
         {
             _myFiles = myFiles;
             _fileSaver = new FileSaver(_myFiles);
-            
+            _outBoundManager = new OutboundManager(scheduler);
         }
 
         /// <summary>
