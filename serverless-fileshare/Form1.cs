@@ -17,8 +17,11 @@ namespace serverless_fileshare
         public Form1()
         {
             InitializeComponent();
-            scheduler = new MovingTCPScheduler();
-            outbound = new OutboundManager(scheduler);
+            MyFilesDB myFiles = new MyFilesDB();
+            myFiles.AddFile(@"E:\Cales stuff\pics\me\jamaica.jpg");
+            scheduler = new MovingTCPScheduler(myFiles);
+            //outbound = new OutboundManager(scheduler);
+            MyNeighbors myNeighbors = new MyNeighbors(scheduler);
             scheduler.Start();
         }
 
@@ -26,7 +29,7 @@ namespace serverless_fileshare
         {
             try
             {
-                outbound.SendFile(0, @"C:\Test\holiday.mp3", IPAddress.Parse("172.16.1.100"));
+               // outbound.SendFile(0, @"C:\Test\holiday.mp3", IPAddress.Parse("172.16.1.100"));
             }
             catch (Exception ex)
             {

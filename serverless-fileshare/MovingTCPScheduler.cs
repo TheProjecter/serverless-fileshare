@@ -13,14 +13,15 @@ namespace serverless_fileshare
     {
         PortFinder _portFinder = new PortFinder();
         PortListener[] _portListeners;
+        PacketSorter _sorter;
         System.Windows.Forms.Timer _portChangeClock = new System.Windows.Forms.Timer();
 
-        public MovingTCPScheduler()
+        public MovingTCPScheduler(MyFilesDB myFiles)
         {
             _portListeners = new PortListener[3];
             _portChangeClock.Interval = Properties.Settings.Default.PortChangeInterval;
             _portChangeClock.Tick += new EventHandler(timer_Tick);
-            
+            PacketSorter _sorter = new PacketSorter(myFiles,this);
         }
 
         public void Start()
@@ -76,9 +77,9 @@ namespace serverless_fileshare
         {
             StopListeners();
 
-            _portListeners[0] = new PortListener(IPAddress.Any, _portFinder.GetPreviousPort());
-            _portListeners[1] = new PortListener(IPAddress.Any, _portFinder.GetCurrentPort());
-            _portListeners[2] = new PortListener(IPAddress.Any, _portFinder.GetNextPort());
+            _portListeners[0] = new PortListener(IPAddress.Any, _portFinder.GetPreviousPort(),_sorter);
+            _portListeners[1] = new PortListener(IPAddress.Any, _portFinder.GetCurrentPort(),_sorter);
+            _portListeners[2] = new PortListener(IPAddress.Any, _portFinder.GetNextPort(),_sorter);
 
             StartListeners();
         }

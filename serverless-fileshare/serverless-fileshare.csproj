@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="MovingTCPScheduler.cs" />
     <Compile Include="MyFilesDB.cs" />
+    <Compile Include="MyNeighbors.cs" />
     <Compile Include="OutboundManager.cs" />
     <Compile Include="PacketSorter.cs" />
     <Compile Include="PendingFile.cs" />

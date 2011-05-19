@@ -21,25 +21,29 @@ namespace serverless_fileshare
         }
 
         /// <summary>
-        /// Adds the file at the given location and splits it up until multiple entries in the hash db
+        /// Adds the file at the given location and splits it up into multiple entries in the hash db
         /// </summary>
         /// <param name="fileLoc"></param>
         public void AddFile(String fileLoc)
         {
-            //Remove the last slash in case it is a folder
-            if (fileLoc.EndsWith("\\"))
-                fileLoc = fileLoc.Substring(0, fileLoc.Length - 1);
-
-            int lastSlash=fileLoc.LastIndexOf(@"\");
-            String filename = fileLoc.Substring(lastSlash, fileLoc.Length - lastSlash);
-            String[] toSplit = { " ", "-","\\" };
-            foreach (String hashText in fileLoc.ToUpper().Split(toSplit, StringSplitOptions.None))
+            if (File.Exists(fileLoc))
             {
-                FileHash fHash = new FileHash();
-                fHash.FileLoc = fileLoc;
-                fHash.FileName = filename;
-                fHash.Hash = hashText;
-                _fileHashes.Add(hashText, fHash);
+                //Remove the last slash in case it is a folder
+                if (fileLoc.EndsWith("\\"))
+                    fileLoc = fileLoc.Substring(0, fileLoc.Length - 1);
+
+                int lastSlash = fileLoc.LastIndexOf(@"\");
+                String filename = fileLoc.Substring(lastSlash, fileLoc.Length - lastSlash);
+                //split file location into spaces,dashes, and slashes
+                String[] toSplit = { " ", "-", "\\" };
+                foreach (String hashText in fileLoc.ToUpper().Split(toSplit, StringSplitOptions.None))
+                {
+                    FileHash fHash = new FileHash();
+                    fHash.FileLoc = fileLoc;
+                    fHash.FileName = filename;
+                    fHash.Hash = hashText;
+                    _fileHashes.Add(hashText, fHash);
+                }
             }
         }
 
@@ -74,6 +78,7 @@ namespace serverless_fileshare
         {
             ArrayList itemsFound = new ArrayList();
             String[] toSplit = { " ", "-","\\" };
+
             foreach (String hashSplit in query.ToUpper().Split(toSplit,StringSplitOptions.None))
             {
                 if (_fileHashes.ContainsKey(hashSplit.GetHashCode()))
@@ -81,7 +86,7 @@ namespace serverless_fileshare
                     itemsFound.Add(_fileHashes[hashSplit.GetHashCode()]);
                 }
             }
-
+            //TODO: Order items found by the number of occurances of the given string
             return itemsFound;
         }
 
