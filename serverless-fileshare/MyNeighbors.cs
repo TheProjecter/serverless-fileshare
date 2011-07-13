@@ -8,16 +8,14 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 namespace serverless_fileshare
 {
-    class MyNeighbors
+    public class MyNeighbors
     {
         ArrayList _listOfNeighbors;
         private const String _fileLoc = "MyNeighbors.dat";
-        MovingTCPScheduler _tcpScheduler;
         System.Windows.Forms.Timer _checkNeighbors = new System.Windows.Forms.Timer();
 
-        public MyNeighbors(MovingTCPScheduler scheduler)
+        public MyNeighbors()
         {
-            _tcpScheduler = scheduler;
 
             Load();
             _checkNeighbors.Interval = Properties.Settings.Default.PortChangeInterval;
@@ -37,8 +35,11 @@ namespace serverless_fileshare
         {
             Neighbor nb = new Neighbor();
             nb.IPAddress = IPAddress;
-            _listOfNeighbors.Add(nb);
-            Save();
+            if (!_listOfNeighbors.Contains(nb))
+            {
+                _listOfNeighbors.Add(nb);
+                Save();
+            }
         }
 
         public ArrayList GetListOfNeighbors()
@@ -92,5 +93,16 @@ namespace serverless_fileshare
     struct Neighbor
     {
         public String IPAddress;
+
+        public override Boolean Equals(object obj)
+        {
+            Neighbor nb = (Neighbor)obj;
+            return IPAddress == nb.IPAddress;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

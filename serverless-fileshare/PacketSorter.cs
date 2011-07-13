@@ -13,12 +13,14 @@ namespace serverless_fileshare
         FileSaver _fileSaver;
         MyFilesDB _myFiles;
         OutboundManager _outBoundManager;
+        MovingTCPScheduler _scheduler;
 
         public PacketSorter(MyFilesDB myFiles,MovingTCPScheduler scheduler)
         {
             _myFiles = myFiles;
             _fileSaver = new FileSaver(_myFiles);
-            _outBoundManager = new OutboundManager(scheduler);
+            _outBoundManager = scheduler.outboundManager;
+            _scheduler = scheduler;
         }
 
         /// <summary>
@@ -41,7 +43,7 @@ namespace serverless_fileshare
                     MemoryStream stream = new MemoryStream(incomingPacket.GetPacketData());
                     BinaryFormatter bf = new BinaryFormatter();
                     ArrayList searchResults = (ArrayList)bf.Deserialize(stream);
-
+                    _scheduler.fileSearchForm.AddResults(searchResults,incomingPacket._sourceIP);
                     break;
                     
             }

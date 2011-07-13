@@ -9,11 +9,14 @@ using System.Threading;
 
 namespace serverless_fileshare
 {
-    class MovingTCPScheduler
+    public class MovingTCPScheduler
     {
         PortFinder _portFinder = new PortFinder();
         PortListener[] _portListeners;
         PacketSorter _sorter;
+        public OutboundManager outboundManager;
+        public FileSearchForm fileSearchForm;
+
         System.Windows.Forms.Timer _portChangeClock = new System.Windows.Forms.Timer();
 
         public MovingTCPScheduler(MyFilesDB myFiles)
@@ -21,6 +24,7 @@ namespace serverless_fileshare
             _portListeners = new PortListener[3];
             _portChangeClock.Interval = Properties.Settings.Default.PortChangeInterval;
             _portChangeClock.Tick += new EventHandler(timer_Tick);
+            outboundManager = new OutboundManager(this);
             _sorter = new PacketSorter(myFiles,this);
         }
 

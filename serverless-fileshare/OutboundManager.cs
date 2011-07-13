@@ -11,7 +11,7 @@ using System.Collections;
 using System.Runtime.Serialization.Formatters.Binary;
 namespace serverless_fileshare
 {
-    class OutboundManager
+    public class OutboundManager
     {
         MovingTCPScheduler _scheduler;
         public OutboundManager(MovingTCPScheduler scheduler)

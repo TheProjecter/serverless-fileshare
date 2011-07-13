@@ -6,7 +6,7 @@ using System.Net;
 
 namespace serverless_fileshare
 {
-    class SFPacket
+    public class SFPacket
     {
         int _type;
         byte[] _data;
