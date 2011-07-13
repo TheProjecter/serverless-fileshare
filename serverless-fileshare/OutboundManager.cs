@@ -93,20 +93,64 @@ namespace serverless_fileshare
 
 
 
-        public void SendFileList(ArrayList files)
+        public void SendFileList(ArrayList files,IPAddress destination)
         {
-            //TODO: Well crap. This needs to split an arraylist into multiple packets (if its huge). And if that happens 
-            //then i'm really screwed because I have to put them back together as one arraylist... Lets make the packet
-            //size big enough to allow for a good sized arraylist and drop the rest after that...
+
+            byte[] data=null;
+            int packetSize = Properties.Settings.Default.PacketDataSize;
+
+            while (data == null || data.Length+2 > packetSize)
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                MemoryStream ms = new MemoryStream();
+                bf.Serialize(ms, files);
+                data = ms.ToArray();
+
+                if (data.Length+2 > packetSize)
+                {
+                    //If there are too many items because it goes over the packet size remove
+                    //the last item in it
+                    files.RemoveAt(files.Count - 1);
+                }
+            }
+
+            long bytesRead = 0;
+            byte[] buffer;
+            int packetsSent = 0;
+
+            try
+            {
+                while (bytesRead + (packetSize) < data.Length)
+                {
+                    buffer = new byte[packetsSent];  
+                    Array.Copy(data, buffer, packetsSent);
+                    SFPacket packet = new SFPacket(SFPacketType.FileList, buffer);
+                    _scheduler.SendPacket(packet, destination);
+                    bytesRead += buffer.Length;
+                    packetsSent++;
+                }
+
+                if (data.Length > bytesRead)
+                {
+                    byte[] toSend = new byte[data.Length];
+                    Array.Copy(data,toSend,((int)(data.Length - bytesRead)));
+                    SFPacket finalPacket = new SFPacket(SFPacketType.FileList, toSend);
+                    _scheduler.SendPacket(finalPacket, destination);
+                    packetsSent++;
+                }
+
+                System.Console.WriteLine("Packets Sent: " + packetsSent);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         public void SendSearchRequest(String query, IPAddress dest)
         {
-            BinaryFormatter bf = new BinaryFormatter();
             byte[] bytes;
-            MemoryStream ms = new MemoryStream();
-            bf.Serialize(ms, query);
-            bytes = ms.ToArray();
+            bytes = Encoding.ASCII.GetBytes(query);
             if (bytes.Length < Properties.Settings.Default.PacketDataSize)
             {
                 SFPacket packet = new SFPacket(SFPacketType.SearchForFile, bytes);

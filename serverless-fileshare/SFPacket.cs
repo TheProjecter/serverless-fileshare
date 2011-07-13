@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Net;
 
 namespace serverless_fileshare
 {
@@ -9,6 +10,7 @@ namespace serverless_fileshare
     {
         int _type;
         byte[] _data;
+        public IPAddress _sourceIP;
         public SFPacket(byte[] message,int messageSize)
         {
             this._type = GrabType(message);

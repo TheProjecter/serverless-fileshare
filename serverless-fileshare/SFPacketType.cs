@@ -9,5 +9,6 @@ namespace serverless_fileshare
     {
         public const int FileTransfer = 0;
         public const int SearchForFile = 1;
+        public const int FileList = 2;
     }
 }
