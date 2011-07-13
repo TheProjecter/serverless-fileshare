@@ -33,6 +33,14 @@ namespace serverless_fileshare
             }
         }
 
+        public void AddNeighbor(String IPAddress)
+        {
+            Neighbor nb = new Neighbor();
+            nb.IPAddress = IPAddress;
+            _listOfNeighbors.Add(nb);
+            Save();
+        }
+
         public ArrayList GetListOfNeighbors()
         {
             return _listOfNeighbors;
@@ -48,7 +56,7 @@ namespace serverless_fileshare
             }
 
             FileStream fs = new FileStream(_fileLoc,
-                        FileMode.OpenOrCreate, FileAccess.Write);
+                        FileMode.OpenOrCreate, FileAccess.Read);
 
             try
             {

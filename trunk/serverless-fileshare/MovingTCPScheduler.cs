@@ -21,7 +21,7 @@ namespace serverless_fileshare
             _portListeners = new PortListener[3];
             _portChangeClock.Interval = Properties.Settings.Default.PortChangeInterval;
             _portChangeClock.Tick += new EventHandler(timer_Tick);
-            PacketSorter _sorter = new PacketSorter(myFiles,this);
+            _sorter = new PacketSorter(myFiles,this);
         }
 
         public void Start()

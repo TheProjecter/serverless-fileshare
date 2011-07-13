@@ -14,27 +14,30 @@ namespace serverless_fileshare
     {
         MovingTCPScheduler scheduler;
         OutboundManager outbound;
+
+        MyNeighbors myNeighbors;
         public Form1()
         {
             InitializeComponent();
             MyFilesDB myFiles = new MyFilesDB();
-            myFiles.AddFile(@"E:\Cales stuff\pics\me\jamaica.jpg");
+            myFiles.AddFile(@"C:\Tucker.jpg");
+            myFiles.AddFile(@"C:\Party.jpg");
             scheduler = new MovingTCPScheduler(myFiles);
-            //outbound = new OutboundManager(scheduler);
-            MyNeighbors myNeighbors = new MyNeighbors(scheduler);
             scheduler.Start();
+            outbound = new OutboundManager(scheduler);
+            myNeighbors = new MyNeighbors(scheduler);
+            myNeighbors.AddNeighbor("172.16.1.100");
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            try
-            {
+                foreach (Neighbor nb in myNeighbors.GetListOfNeighbors())
+                {
+                    outbound.SendSearchRequest(tbSearch.Text,IPAddress.Parse(nb.IPAddress));
+                }
                // outbound.SendFile(0, @"C:\Test\holiday.mp3", IPAddress.Parse("172.16.1.100"));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+                
+            
         }
     }
 }

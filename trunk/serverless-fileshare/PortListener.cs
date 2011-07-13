@@ -113,6 +113,8 @@ namespace serverless_fileshare
 
             }
             SFPacket packet = new SFPacket(message, bytesRead);
+            String ip = tcpClient.Client.RemoteEndPoint.ToString();
+            packet._sourceIP =IPAddress.Parse(ip.Substring(0,ip.IndexOf(':')));
             packetsReceived++;
             _sorter.SortPacket(packet);
             Console.WriteLine("Received: " + bytesRead);
