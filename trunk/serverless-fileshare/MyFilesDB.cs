@@ -9,17 +9,20 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 namespace serverless_fileshare
 {
-    class MyFilesDB
+    public class MyFilesDB
     {
 
         private const String _fileLoc = "FileHash.dat";
+        private const String _fileNameLoc = "FileNames.dat";
 
         private Hashtable _fileHashes;
+        private ArrayList _fileNames;
         private String[] toSplit = { " ", "-", "\\","." };
         public MyFilesDB()
         {
 
             _fileHashes = new Hashtable();
+            _fileNames = new ArrayList();
             Load();
         }
 
@@ -31,29 +34,34 @@ namespace serverless_fileshare
         {
             if (File.Exists(fileLoc))
             {
-                //Remove the last slash in case it is a folder
-                if (fileLoc.EndsWith("\\"))
-                    fileLoc = fileLoc.Substring(0, fileLoc.Length - 1);
-
-                int lastSlash = fileLoc.LastIndexOf(@"\")+1;
-                String filename = fileLoc.Substring(lastSlash, fileLoc.Length - lastSlash);
-                //split file location into spaces,dashes, and slashes
-                foreach (String hashText in fileLoc.ToUpper().Split(toSplit, StringSplitOptions.None))
+                if (!_fileNames.Contains(fileLoc))
                 {
-                    FileHash fHash = new FileHash();
-                    fHash.Hash = hashText.ToUpper().GetHashCode();
-                    if (_fileHashes.ContainsKey(fHash.Hash))
-                    {
-                        fHash =(FileHash) _fileHashes[fHash.Hash];
-                    }
-                    else
-                    {
-                        fHash.FileList=new ArrayList();
-                        _fileHashes.Add(fHash.Hash, fHash);
-                    }
-                    fHash.FileList.Add(new MyFile(filename, fileLoc));
+                    //Remove the last slash in case it is a folder
+                    if (fileLoc.EndsWith("\\"))
+                        fileLoc = fileLoc.Substring(0, fileLoc.Length - 1);
 
+                    int lastSlash = fileLoc.LastIndexOf(@"\") + 1;
+                    String filename = fileLoc.Substring(lastSlash, fileLoc.Length - lastSlash);
+                    //split file location into spaces,dashes, and slashes
+                    foreach (String hashText in fileLoc.ToUpper().Split(toSplit, StringSplitOptions.None))
+                    {
+                        FileHash fHash = new FileHash();
+                        fHash.Hash = hashText.ToUpper().GetHashCode();
+                        if (_fileHashes.ContainsKey(fHash.Hash))
+                        {
+                            fHash = (FileHash)_fileHashes[fHash.Hash];
+                        }
+                        else
+                        {
+                            fHash.FileList = new ArrayList();
+                            _fileHashes.Add(fHash.Hash, fHash);
+                        }
+                        fHash.FileList.Add(new MyFile(filename, fileLoc,_fileNames.Count));
+                       
 
+                    }
+                    _fileNames.Add(fileLoc);
+                    Save();
                 }
             }
         }
@@ -67,6 +75,7 @@ namespace serverless_fileshare
             if (!File.Exists(_fileLoc))
             {
                 _fileHashes = new Hashtable();
+                _fileNames = new ArrayList();
                 Save();
             }
 
@@ -78,6 +87,20 @@ namespace serverless_fileshare
 
                 BinaryFormatter bf = new BinaryFormatter();
                 _fileHashes = (Hashtable)bf.Deserialize(fs);
+            }
+            finally
+            {
+                fs.Close();
+            }
+
+            fs = new FileStream(_fileNameLoc,
+                        FileMode.OpenOrCreate, FileAccess.Read);
+
+            try
+            {
+
+                BinaryFormatter bf = new BinaryFormatter();
+                _fileNames = (ArrayList)bf.Deserialize(fs);
             }
             finally
             {
@@ -119,6 +142,20 @@ namespace serverless_fileshare
             {
                 fs.Close();
             }
+
+            fs = new FileStream(_fileNameLoc,
+                        FileMode.OpenOrCreate, FileAccess.Write);
+
+            try
+            {
+
+                BinaryFormatter bf = new BinaryFormatter();
+                bf.Serialize(fs, _fileNames);
+            }
+            finally
+            {
+                fs.Close();
+            }
         }
     }
 
@@ -136,10 +173,12 @@ namespace serverless_fileshare
 
         public String FileName;
         public String FileLoc;
-        public MyFile(String filename, String fileloc)
+        public int FileNumber;
+        public MyFile(String filename, String fileloc,int fileNumber)
         {
             FileName = filename;
             FileLoc = fileloc;
+            FileNumber = fileNumber;
         }
 
         public MyFile(SerializationInfo info, StreamingContext ctxt)

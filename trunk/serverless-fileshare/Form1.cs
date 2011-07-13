@@ -12,32 +12,34 @@ namespace serverless_fileshare
 {
     public partial class Form1 : Form
     {
-        MovingTCPScheduler scheduler;
-        OutboundManager outbound;
+        //Views
+        FileSearchForm fileSearchForm;
 
+        //Classes
+        MyFilesDB myFiles;
         MyNeighbors myNeighbors;
+        MovingTCPScheduler scheduler;
         public Form1()
         {
             InitializeComponent();
-            MyFilesDB myFiles = new MyFilesDB();
-            myFiles.AddFile(@"C:\Tucker.jpg");
-            myFiles.AddFile(@"C:\Party.jpg");
+
+            myFiles = new MyFilesDB();
+            myNeighbors = new MyNeighbors();
             scheduler = new MovingTCPScheduler(myFiles);
             scheduler.Start();
-            outbound = new OutboundManager(scheduler);
-            myNeighbors = new MyNeighbors(scheduler);
+
+            fileSearchForm = new FileSearchForm(myNeighbors, scheduler);
+
+
+            myFiles.AddFile(@"C:\Tucker.jpg");
+            myFiles.AddFile(@"C:\Party.jpg");
             myNeighbors.AddNeighbor("172.16.1.100");
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnSearch_Click(object sender, EventArgs e)
         {
-                foreach (Neighbor nb in myNeighbors.GetListOfNeighbors())
-                {
-                    outbound.SendSearchRequest(tbSearch.Text,IPAddress.Parse(nb.IPAddress));
-                }
-               // outbound.SendFile(0, @"C:\Test\holiday.mp3", IPAddress.Parse("172.16.1.100"));
-                
-            
+            fileSearchForm.ShowDialog();
         }
+
     }
 }
