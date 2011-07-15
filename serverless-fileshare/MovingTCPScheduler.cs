@@ -16,11 +16,14 @@ namespace serverless_fileshare
         PacketSorter _sorter;
         public OutboundManager outboundManager;
         public FileSearchForm fileSearchForm;
+        public PendingFileTransferDB fileTransferDB;
 
         System.Windows.Forms.Timer _portChangeClock = new System.Windows.Forms.Timer();
 
         public MovingTCPScheduler(MyFilesDB myFiles)
         {
+
+            fileTransferDB = new PendingFileTransferDB();
             _portListeners = new PortListener[3];
             _portChangeClock.Interval = Properties.Settings.Default.PortChangeInterval;
             _portChangeClock.Tick += new EventHandler(timer_Tick);

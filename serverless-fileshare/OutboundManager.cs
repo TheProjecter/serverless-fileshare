@@ -147,6 +147,11 @@ namespace serverless_fileshare
             }
         }
 
+        /// <summary>
+        /// Sends a search request packet to given IP address
+        /// </summary>
+        /// <param name="query">The query to be sent</param>
+        /// <param name="dest">IP address of the person you want to query</param>
         public void SendSearchRequest(String query, IPAddress dest)
         {
             byte[] bytes;
@@ -160,6 +165,19 @@ namespace serverless_fileshare
             {
                 throw new Exception("Search Request data size is too large for one packet: " + query);
             }
+        }
+
+        /// <summary>
+        /// Sends a packet requesting a file download
+        /// </summary>
+        /// <param name="fileID">id of the file you want</param>
+        /// <param name="dest">IPAddress of the destination</param>
+        public void SendFileDownloadRequest(int fileID, IPAddress dest)
+        {
+            byte[] data = { (byte)fileID };
+            SFPacket packet=new SFPacket(SFPacketType.FileDownloadRequest,data);
+            _scheduler.SendPacket(packet,dest);
+            
         }
     }
 }

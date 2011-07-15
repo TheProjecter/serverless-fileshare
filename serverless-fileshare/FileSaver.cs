@@ -9,15 +9,15 @@ namespace serverless_fileshare
 {
     class FileSaver
     {
-        PendingFileTransferDB _pendingFileTransferDB;
         MyFilesDB _myFiles;
         Hashtable pendingFileQueue;
-        public FileSaver(MyFilesDB myFiles)
+        PendingFileTransferDB _pendingFileTransferDB;
+        public FileSaver(MyFilesDB myFiles, PendingFileTransferDB pendingFileTransferDB)
         {
             _myFiles = myFiles;
 
             //TODO: Load pendingFileTransfers from DB
-            _pendingFileTransferDB = new PendingFileTransferDB();
+            _pendingFileTransferDB = pendingFileTransferDB;
             pendingFileQueue = new Hashtable();
         }
 
@@ -44,8 +44,7 @@ namespace serverless_fileshare
 
         private String GetFileLoc(int fileID)
         {
-            //TODO: look up fileloc in DB
-            return @"C:\Test\received.mp3";
+            return _pendingFileTransferDB.GetPendingWithID(fileID).fileLocation;
         }
         
     }
