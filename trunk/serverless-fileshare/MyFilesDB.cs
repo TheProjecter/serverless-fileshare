@@ -7,6 +7,7 @@ using System.Collections;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
+using System.Net;
 namespace serverless_fileshare
 {
     public class MyFilesDB
@@ -60,10 +61,21 @@ namespace serverless_fileshare
                        
 
                     }
-                    _fileNames.Add(fileLoc);
+                    
+                    _fileNames.Add(new MyFile(filename, fileLoc, _fileNames.Count));
                     Save();
                 }
             }
+        }
+
+        /// <summary>
+        /// Searches the file DB for an id
+        /// </summary>
+        /// <param name="id">id of the file wanted to download</param>
+        /// <returns></returns>
+        public MyFile GetFileByID(int id)
+        {
+            return (MyFile)_fileNames[id];
         }
 
         /// <summary>
@@ -168,12 +180,13 @@ namespace serverless_fileshare
     }
 
     [Serializable]
-    class MyFile
+    public class MyFile
     {
 
         public String FileName;
         public String FileLoc;
         public int FileNumber;
+        public IPAddress ip;
         public MyFile(String filename, String fileloc,int fileNumber)
         {
             FileName = filename;

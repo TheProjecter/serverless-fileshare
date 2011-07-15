@@ -18,7 +18,7 @@ namespace serverless_fileshare
         public PacketSorter(MyFilesDB myFiles,MovingTCPScheduler scheduler)
         {
             _myFiles = myFiles;
-            _fileSaver = new FileSaver(_myFiles);
+            _fileSaver = new FileSaver(_myFiles,scheduler.fileTransferDB);
             _outBoundManager = scheduler.outboundManager;
             _scheduler = scheduler;
         }
@@ -44,6 +44,15 @@ namespace serverless_fileshare
                     BinaryFormatter bf = new BinaryFormatter();
                     ArrayList searchResults = (ArrayList)bf.Deserialize(stream);
                     _scheduler.fileSearchForm.AddResults(searchResults,incomingPacket._sourceIP);
+                    break;
+
+                case SFPacketType.FileDownloadRequest:
+                    //Get the fileID
+                    int fileId=(int)incomingPacket.GetPacketData()[0];
+                    //Lookup the file by its ID
+                    MyFile file=_myFiles.GetFileByID(fileId);
+                    //Send back the file
+                    _outBoundManager.SendFile(fileId, file.FileLoc, incomingPacket._sourceIP);
                     break;
                     
             }

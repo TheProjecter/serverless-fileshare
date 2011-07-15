@@ -6,13 +6,19 @@ using System.Collections;
 
 namespace serverless_fileshare
 {
-    class PendingFileTransferDB
+    public class PendingFileTransferDB
     {
         Hashtable _pendingFiles;
         public PendingFileTransferDB()
         {
             _pendingFiles = new Hashtable();
         }
+
+        public void AddPendingFile(PendingFile pFile)
+        {
+            _pendingFiles.Add(pFile.id, pFile);
+        }
+
         /// <summary>
         /// Returns the PendingFile object with the give ID
         /// </summary>

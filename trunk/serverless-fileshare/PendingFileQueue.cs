@@ -11,7 +11,7 @@ namespace serverless_fileshare
     /// <summary>
     /// Queues the packets when there is an error in saving the file
     /// </summary>
-    class PendingFileQueue
+    public class PendingFileQueue
     {
         Queue _queue;
         Thread _td;
