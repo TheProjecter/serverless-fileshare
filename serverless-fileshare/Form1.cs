@@ -49,6 +49,15 @@ namespace serverless_fileshare
 
         void refreshDataTimer_Tick(object sender, EventArgs e)
         {
+            string ipList = "";
+            foreach(IPAddress ip in Dns.GetHostAddresses(""))
+            {
+                if (!ip.IsIPv6LinkLocal && !ip.IsIPv6Teredo)
+                {
+                    ipList += ", " + ip.ToString();
+                }
+            }
+            lblMyIP.Text = ipList.Substring(2);
             lblNumNeighbors.Text = myNeighbors.GetListOfNeighbors().Count.ToString();
             lblNumShared.Text = myFiles.GetNumberOfFiles().ToString();
         }
