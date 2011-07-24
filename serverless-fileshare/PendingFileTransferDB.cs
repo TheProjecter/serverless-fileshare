@@ -16,7 +16,9 @@ namespace serverless_fileshare
 
         public void AddPendingFile(PendingFile pFile)
         {
-            _pendingFiles.Add(pFile.id, pFile);
+            String key=pFile.id+pFile.Source;
+            if(!_pendingFiles.Contains(key))
+            _pendingFiles.Add(key, pFile);
         }
 
         /// <summary>
@@ -24,9 +26,9 @@ namespace serverless_fileshare
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public PendingFile GetPendingWithID(int id)
+        public PendingFile GetPendingWithID(int id,String source)
         {
-            object found= _pendingFiles[id];
+            object found= _pendingFiles[id+source];
             if(found==null)
                 return null;
             return (PendingFile)found;

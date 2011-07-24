@@ -28,23 +28,23 @@ namespace serverless_fileshare
         /// <param name="fromQueue">If the SavePacket is called from a queue then there
         /// is no need to add it again</param>
         /// <returns>returns true if the packet saved correctly</returns>
-        public void SavePacket(byte[] data)
+        public void SavePacket(byte[] data,String source)
         {
-            int fileID = data[0];
+            int fileID = BitConverter.ToInt32(data,0);
             if (pendingFileQueue.ContainsKey(fileID))
             {
                 ((PendingFileQueue)pendingFileQueue[fileID]).AddPacket(data);
             }
             else
             {
-                PendingFileQueue pfq = new PendingFileQueue(data,fileID,GetFileLoc(fileID));
+                PendingFileQueue pfq = new PendingFileQueue(data,fileID,GetFileLoc(fileID,source));
                 pendingFileQueue.Add(fileID, pfq);
             }
         }
 
-        private String GetFileLoc(int fileID)
+        private String GetFileLoc(int fileID,String source)
         {
-            return _pendingFileTransferDB.GetPendingWithID(fileID).fileLocation;
+            return _pendingFileTransferDB.GetPendingWithID(fileID,source).fileLocation;
         }
         
     }

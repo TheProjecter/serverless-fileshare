@@ -17,6 +17,7 @@ namespace serverless_fileshare
         public OutboundManager outboundManager;
         public FileSearchForm fileSearchForm;
         public PendingFileTransferDB fileTransferDB;
+        public MyNeighbors myNeighbors;
 
         System.Windows.Forms.Timer _portChangeClock = new System.Windows.Forms.Timer();
 
