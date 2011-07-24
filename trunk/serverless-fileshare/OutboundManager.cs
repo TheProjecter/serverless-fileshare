@@ -42,12 +42,11 @@ namespace serverless_fileshare
             int packetSize=Properties.Settings.Default.PacketDataSize;
             byte[] buffer;
             int packetsSent = 0;
-
-            try
-            {
-                while (bytesRead+(packetSize-1)<fileSize)
+            int toSkip = BitConverter.GetBytes(fileID).Length;
+            //try{
+                while (bytesRead+(packetSize-toSkip)<fileSize)
                 {
-                    buffer = br.ReadBytes(packetSize-1);
+                    buffer = br.ReadBytes(packetSize-toSkip);
                     byte[] toSend=ShiftBytes(fileID, buffer);
                     SFPacket packet = new SFPacket(SFPacketType.FileTransfer,toSend );
                     _scheduler.SendPacket(packet, destination);
@@ -66,11 +65,12 @@ namespace serverless_fileshare
 
                 br.Close();
                 System.Console.WriteLine("Packets Sent: " + packetsSent);
-            }
+            /*}
             catch (Exception ex)
             {
 
             }
+             */
 
         }
 
@@ -82,11 +82,18 @@ namespace serverless_fileshare
         /// <returns></returns>
         private byte[] ShiftBytes(int fileID, byte[] data)
         {
-            byte[] toReturn = new byte[data.Length + 1];
-            toReturn[0] =(byte) fileID;
-            for (int x = 1; x < data.Length+1; x++)
+            byte[] fileIDBytes = BitConverter.GetBytes(fileID);
+            byte[] toReturn = new byte[data.Length + fileIDBytes.Length];
+            int i = 0;
+            for ( i= 0; i < fileIDBytes.Length; i++)
             {
-                toReturn[x] = data[x-1];
+                toReturn[i] = fileIDBytes[i];
+            }
+            int dataCount = 0;
+            for (int x = i; x < toReturn.Length; x++)
+            {
+                toReturn[x] = data[dataCount];
+                dataCount++;
             }
             return toReturn;
         }
@@ -174,10 +181,74 @@ namespace serverless_fileshare
         /// <param name="dest">IPAddress of the destination</param>
         public void SendFileDownloadRequest(int fileID, IPAddress dest)
         {
-            byte[] data = { (byte)fileID };
+            byte[] data = BitConverter.GetBytes(fileID);
             SFPacket packet=new SFPacket(SFPacketType.FileDownloadRequest,data);
             _scheduler.SendPacket(packet,dest);
             
+        }
+
+        public void SendNeighborDownloadRequest(IPAddress dest)
+        {
+            byte[] bytes;
+            bytes = Encoding.ASCII.GetBytes("");
+            if (bytes.Length < Properties.Settings.Default.PacketDataSize)
+            {
+                SFPacket packet = new SFPacket(SFPacketType.GetNeighborList, bytes);
+                _scheduler.SendPacket(packet, dest);
+            }
+        }
+
+        public void SendNeigbhorList(IPAddress dest)
+        {
+            byte[] data=null;
+            int packetSize = Properties.Settings.Default.PacketDataSize;
+            ArrayList neighbors = _scheduler.myNeighbors.GetListOfNeighbors();
+            while (data == null || data.Length+2 > packetSize)
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                MemoryStream ms = new MemoryStream();
+                bf.Serialize(ms, neighbors);
+                data = ms.ToArray();
+
+                if (data.Length+2 > packetSize)
+                {
+                    //If there are too many items because it goes over the packet size remove
+                    //the first item because we hope that was received earlier
+                    neighbors.RemoveAt(0);
+                }
+            }
+
+            long bytesRead = 0;
+            byte[] buffer;
+            int packetsSent = 0;
+
+            try
+            {
+                while (bytesRead + (packetSize) < data.Length)
+                {
+                    buffer = new byte[packetsSent];  
+                    Array.Copy(data, buffer, packetsSent);
+                    SFPacket packet = new SFPacket(SFPacketType.FileList, buffer);
+                    _scheduler.SendPacket(packet, dest);
+                    bytesRead += buffer.Length;
+                    packetsSent++;
+                }
+
+                if (data.Length > bytesRead)
+                {
+                    byte[] toSend = new byte[data.Length];
+                    Array.Copy(data,toSend,((int)(data.Length - bytesRead)));
+                    SFPacket finalPacket = new SFPacket(SFPacketType.FileList, toSend);
+                    _scheduler.SendPacket(finalPacket, dest);
+                    packetsSent++;
+                }
+
+                System.Console.WriteLine("Packets Sent: " + packetsSent);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }

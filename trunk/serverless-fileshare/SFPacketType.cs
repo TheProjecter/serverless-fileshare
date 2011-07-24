@@ -11,5 +11,7 @@ namespace serverless_fileshare
         public const int SearchForFile = 1;
         public const int FileList = 2;
         public const int FileDownloadRequest = 3;
+        public const int GetNeighborList = 4;
+        public const int NeighborListResponse = 5;
     }
 }

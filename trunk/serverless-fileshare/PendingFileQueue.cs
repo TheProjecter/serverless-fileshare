@@ -67,8 +67,10 @@ namespace serverless_fileshare
         {
             try
             {
+                int fileId = BitConverter.ToInt32(data,0);
+                int toSkip = BitConverter.GetBytes(fileId).Length;
                 FileStream fs = new FileStream(_fileLoc, FileMode.Append);
-                fs.Write(data, 1, data.Length-1);
+                fs.Write(data, toSkip, data.Length-toSkip);
                 fs.Close();
                 return true;
             }

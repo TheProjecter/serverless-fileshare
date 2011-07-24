@@ -19,6 +19,7 @@ namespace serverless_fileshare
         private Hashtable _fileHashes;
         private ArrayList _fileNames;
         private String[] toSplit = { " ", "-", "\\","." };
+        private float fileSize;
         public MyFilesDB()
         {
 
@@ -35,7 +36,7 @@ namespace serverless_fileshare
         {
             if (File.Exists(fileLoc))
             {
-                if (!_fileNames.Contains(fileLoc))
+                if (!HasFileLocation(fileLoc))
                 {
                     //Remove the last slash in case it is a folder
                     if (fileLoc.EndsWith("\\"))
@@ -63,9 +64,34 @@ namespace serverless_fileshare
                     }
                     
                     _fileNames.Add(new MyFile(filename, fileLoc, _fileNames.Count));
-                    Save();
+                    
+
+                    //To reduce file access only save every 50 files that were hashed
+                    if(_fileNames.Count%50==0)
+                        Save();
                 }
             }
+        }
+
+        public int GetNumberOfFiles() { return _fileNames.Count; }
+
+        //TODO: keep track of file sizes
+        //public float GetTotalFileSize(){return 
+
+        /// <summary>
+        /// Searches the list of hashed filenames for that file
+        /// </summary>
+        /// <param name="fileloc">Filename</param>
+        private Boolean HasFileLocation(String fileloc)
+        {
+
+            //TODO: This efficiency sucks... sort filelocations
+            foreach (MyFile file in _fileNames)
+            {
+                if (file.FileLoc == fileloc)
+                    return true;
+            }
+            return false;
         }
 
         /// <summary>

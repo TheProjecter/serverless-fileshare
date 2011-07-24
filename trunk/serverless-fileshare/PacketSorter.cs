@@ -32,7 +32,7 @@ namespace serverless_fileshare
             switch(incomingPacket.GetPacketType())
             {
                 case SFPacketType.FileTransfer:
-                    _fileSaver.SavePacket(incomingPacket.GetPacketData());
+                    _fileSaver.SavePacket(incomingPacket.GetPacketData(),incomingPacket._sourceIP.ToString());
                     break;
                 case SFPacketType.SearchForFile:
                     ArrayList result = _myFiles.SearchFor(
@@ -48,11 +48,22 @@ namespace serverless_fileshare
 
                 case SFPacketType.FileDownloadRequest:
                     //Get the fileID
-                    int fileId=(int)incomingPacket.GetPacketData()[0];
+                    int fileId=BitConverter.ToInt32(incomingPacket.GetPacketData(),0);
                     //Lookup the file by its ID
                     MyFile file=_myFiles.GetFileByID(fileId);
                     //Send back the file
                     _outBoundManager.SendFile(fileId, file.FileLoc, incomingPacket._sourceIP);
+                    break;
+
+                case SFPacketType.GetNeighborList:
+                    _outBoundManager.SendNeigbhorList(incomingPacket._sourceIP);
+                    break;
+                case SFPacketType.NeighborListResponse:
+                    MemoryStream nlstream = new MemoryStream(incomingPacket.GetPacketData());
+                    BinaryFormatter nlbf = new BinaryFormatter();
+                    ArrayList neighbors = (ArrayList)nlbf.Deserialize(nlstream);
+                    foreach (Neighbor nb in neighbors)
+                        _scheduler.myNeighbors.AddNeighbor(nb.IPAddress);
                     break;
                     
             }

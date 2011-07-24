@@ -46,6 +46,7 @@ namespace serverless_fileshare
 
         public void AddResults(ArrayList results,IPAddress neighbor)
         {
+            fullResults.Clear();
             foreach (FileHash fileHash in results)
             {
                 foreach (MyFile file in fileHash.FileList)
@@ -55,7 +56,7 @@ namespace serverless_fileshare
                     DataGridViewRow row = new DataGridViewRow();
 
                     DataGridViewCell namecell = new DataGridViewTextBoxCell();
-                    namecell.Value = file.FileName;
+                    namecell.Value = file.FileLoc;
                     row.Cells.Add(namecell);
 
                     DataGridViewCell nebcell = new DataGridViewTextBoxCell();
@@ -93,10 +94,11 @@ namespace serverless_fileshare
                    
                     MyFile file=(MyFile)fullResults[row.Index];
                     String directory=Properties.Settings.Default.DownloadDirectory;
-                    fileTransferDB.AddPendingFile(new PendingFile(file.FileNumber, directory + file.FileName));
+                    fileTransferDB.AddPendingFile(new PendingFile(file.FileNumber, directory + file.FileName,file.ip.ToString()));
                     outbound.SendFileDownloadRequest(file.FileNumber, file.ip);
                 }
             }
         }
+
     }
 }
