@@ -14,6 +14,7 @@ namespace serverless_fileshare
         PortFinder _portFinder = new PortFinder();
         PortListener[] _portListeners;
         PacketSorter _sorter;
+        private Dictionary<string, DateTime> _unreachableNeighbors;
         public OutboundManager outboundManager;
         public FileSearchForm fileSearchForm;
         public PendingFileTransferDB fileTransferDB;
@@ -30,6 +31,7 @@ namespace serverless_fileshare
             _portChangeClock.Tick += new EventHandler(timer_Tick);
             outboundManager = new OutboundManager(this);
             _sorter = new PacketSorter(myFiles,this);
+            _unreachableNeighbors = new Dictionary<string, DateTime>();
         }
 
         public void Start()
@@ -68,9 +70,28 @@ namespace serverless_fileshare
             }
             catch (Exception ex)
             {
-                //TODO: Keep track of when to quit retrying send. Otherwise if  person goes offline this will run forever.
-                Thread.Sleep(50);
-                SendPacket(packet, destination);
+                //Keep track of when to quit retrying send. Otherwise if  person goes offline this will run forever.
+                //Resolved infinate retrying. Will now only retry for 30 secs, in 50 ms intervals....
+                
+                if (!_unreachableNeighbors.ContainsKey(destination.ToString()))
+                {
+                    _unreachableNeighbors.Add(destination.ToString(), DateTime.Now);
+                    Thread.Sleep(50);
+                    SendPacket(packet, destination);
+                }
+                else
+                {
+                    TimeSpan offlineFor = new TimeSpan(DateTime.Now.Ticks - _unreachableNeighbors[destination.ToString()].Ticks);
+                    if (offlineFor.TotalSeconds > 30)
+                    {
+                        throw new Exception("Destination " + destination.ToString() + " is unreachable");
+                    }
+                    else
+                    {
+                        Thread.Sleep(50);
+                        SendPacket(packet, destination);
+                    }
+                }
             }
         }
 
