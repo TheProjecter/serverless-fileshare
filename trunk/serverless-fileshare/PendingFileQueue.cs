@@ -65,8 +65,8 @@ namespace serverless_fileshare
 
         private Boolean SavePacket(byte[] data)
         {
-            //try
-            //{
+            try
+            {
                 int fileId = BitConverter.ToInt32(data,0);
                 int toSkip = BitConverter.GetBytes(fileId).Length;
 
@@ -75,14 +75,13 @@ namespace serverless_fileshare
                 fs.Write(data, toSkip, data.Length-toSkip);
                 fs.Close();
                 return true;
-            /*}
-            catch (IOException ex)
+            }
+            catch (Exception ex)
             {
-                throw ex;
                 return false;
                 
             }
-             */
+             
         }
     }
 }

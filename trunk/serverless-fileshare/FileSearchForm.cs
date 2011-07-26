@@ -146,8 +146,8 @@ namespace serverless_fileshare
             
             System.Threading.ParameterizedThreadStart ts = new System.Threading.ParameterizedThreadStart(StartDownload);
             System.Threading.Thread thread = new System.Threading.Thread(ts);
-            thread.Start((object)tvResults.SelectedNode);
-            
+            //thread.Start((object)tvResults.SelectedNode);
+            StartDownload(tvResults.SelectedNode);
         }
 
         private void StartDownload(object parameter)
