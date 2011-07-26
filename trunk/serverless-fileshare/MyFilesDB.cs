@@ -149,7 +149,6 @@ namespace serverless_fileshare
         public ArrayList SearchFor(String query)
         {
             ArrayList itemsFound = new ArrayList();
-            
 
             foreach (String hashSplit in query.ToUpper().Split(toSplit,StringSplitOptions.None))
             {
@@ -158,8 +157,13 @@ namespace serverless_fileshare
                     itemsFound.Add(_fileHashes[hashSplit.GetHashCode()]);
                 }
             }
-            //TODO: Order items found by the number of occurances of the given string
-            return itemsFound;
+
+            //HACK: In Theory this will order the results by the most popular results, it is what the internets say, i have no real way of testing this... Heres to crossing fingers
+            ArrayList mostPopular = (ArrayList)from name in itemsFound.Cast<string>()
+                              group name by name into g
+                              orderby g.Count() descending
+                              select g.Key;
+            return mostPopular;
         }
 
         /// <summary>
