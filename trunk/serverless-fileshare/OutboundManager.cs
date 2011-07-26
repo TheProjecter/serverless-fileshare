@@ -228,7 +228,7 @@ namespace serverless_fileshare
                 {
                     buffer = new byte[packetsSent];  
                     Array.Copy(data, buffer, packetsSent);
-                    SFPacket packet = new SFPacket(SFPacketType.FileList, buffer);
+                    SFPacket packet = new SFPacket(SFPacketType.NeighborListResponse, buffer);
                     _scheduler.SendPacket(packet, dest);
                     bytesRead += buffer.Length;
                     packetsSent++;
@@ -238,7 +238,7 @@ namespace serverless_fileshare
                 {
                     byte[] toSend = new byte[data.Length];
                     Array.Copy(data,toSend,((int)(data.Length - bytesRead)));
-                    SFPacket finalPacket = new SFPacket(SFPacketType.FileList, toSend);
+                    SFPacket finalPacket = new SFPacket(SFPacketType.NeighborListResponse, toSend);
                     _scheduler.SendPacket(finalPacket, dest);
                     packetsSent++;
                 }

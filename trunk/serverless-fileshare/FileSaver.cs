@@ -30,21 +30,22 @@ namespace serverless_fileshare
         /// <returns>returns true if the packet saved correctly</returns>
         public void SavePacket(byte[] data,String source)
         {
-            int fileID = BitConverter.ToInt32(data,0);
+            int id = BitConverter.ToInt32(data, 0);
+            String fileID =id +source;
             if (pendingFileQueue.ContainsKey(fileID))
             {
                 ((PendingFileQueue)pendingFileQueue[fileID]).AddPacket(data);
             }
             else
             {
-                PendingFileQueue pfq = new PendingFileQueue(data,fileID,GetFileLoc(fileID,source));
+                PendingFileQueue pfq = new PendingFileQueue(data,id,GetFileLoc(fileID,source));
                 pendingFileQueue.Add(fileID, pfq);
             }
         }
 
-        private String GetFileLoc(int fileID,String source)
+        private String GetFileLoc(String fileID,String source)
         {
-            return _pendingFileTransferDB.GetPendingWithID(fileID,source).fileLocation;
+            return _pendingFileTransferDB.GetPendingWithID(fileID).fileLocation;
         }
         
     }

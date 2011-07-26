@@ -20,7 +20,7 @@ namespace serverless_fileshare
 
             Load();
             _outbound = scheduler.outboundManager;
-            _checkNeighbors.Interval = Properties.Settings.Default.PortChangeInterval;
+            _checkNeighbors.Interval = Properties.Settings.Default.PortChangeInterval*60*1000;
             _checkNeighbors.Tick += new EventHandler(_checkNeighbors_Tick);
             _checkNeighbors.Start();
             scheduler.myNeighbors = this;
@@ -45,16 +45,19 @@ namespace serverless_fileshare
                 maxCount = 10;
             }
             int startLoc=rand.Next(maxValue);
+            if(startLoc+maxCount>_listOfNeighbors.Count)
+                maxCount=(_listOfNeighbors.Count-startLoc);
             foreach (Neighbor nb in _listOfNeighbors.GetRange(startLoc,maxCount))
             {
                 _outbound.SendNeighborDownloadRequest(IPAddress.Parse(nb.IPAddress));
             }
         }
 
-        public void AddNeighbor(String IPAddress)
+        public void AddNeighbor(String IPAddressStr)
         {
+            IPAddress ip = IPAddress.Parse(IPAddressStr);
             Neighbor nb = new Neighbor();
-            nb.IPAddress = IPAddress;
+            nb.IPAddress = IPAddressStr;
             if (!_listOfNeighbors.Contains(nb))
             {
                 _listOfNeighbors.Add(nb);

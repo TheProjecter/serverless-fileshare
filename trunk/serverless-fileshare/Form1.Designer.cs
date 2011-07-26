@@ -39,16 +39,17 @@
             this.label3 = new System.Windows.Forms.Label();
             this.lblNumShared = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.addNeighborToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(12, 38);
+            this.btnSearch.Location = new System.Drawing.Point(87, 37);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(75, 23);
+            this.btnSearch.Size = new System.Drawing.Size(118, 23);
             this.btnSearch.TabIndex = 0;
-            this.btnSearch.Text = "Search";
+            this.btnSearch.Text = "Search Neighbors";
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
@@ -66,6 +67,7 @@
             // 
             this.fIleToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.shareFIlesToolStripMenuItem,
+            this.addNeighborToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fIleToolStripMenuItem.Name = "fIleToolStripMenuItem";
             this.fIleToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
@@ -139,11 +141,18 @@
             this.label4.TabIndex = 6;
             this.label4.Text = "# of Shared Files:";
             // 
+            // addNeighborToolStripMenuItem
+            // 
+            this.addNeighborToolStripMenuItem.Name = "addNeighborToolStripMenuItem";
+            this.addNeighborToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.addNeighborToolStripMenuItem.Text = "Add Neighbor";
+            this.addNeighborToolStripMenuItem.Click += new System.EventHandler(this.addNeighborToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 266);
+            this.ClientSize = new System.Drawing.Size(292, 214);
             this.Controls.Add(this.lblNumShared);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.lblNumNeighbors);
@@ -153,8 +162,9 @@
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Serverless-Fileshare";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -176,6 +186,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblNumShared;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ToolStripMenuItem addNeighborToolStripMenuItem;
 
     }
 }

@@ -41,28 +41,33 @@ namespace serverless_fileshare
             refreshDataTimer_Tick(null, null);
 
 
-            myFiles.AddFile(@"C:\Code\Test.txt");
-            //myFiles.AddFile(@"C:\Party.jpg");
-            //myFiles.AddFile(@"C:\Test\from\300.avi");
-            //myNeighbors.AddNeighbor("172.16.1.100");
-            myNeighbors.AddNeighbor("192.168.1.19");
+            myFiles.AddFile(@"C:\Tucker.jpg");
+            myFiles.AddFile(@"C:\Party.jpg");
+            myFiles.AddFile(@"C:\Test\from\300.avi");
+            myNeighbors.AddNeighbor("172.16.1.100");
         }
 
         void refreshDataTimer_Tick(object sender, EventArgs e)
         {
-            string ipList = "";
-            foreach(IPAddress ip in Dns.GetHostAddresses(""))
-            {
-                if (!ip.IsIPv6LinkLocal && !ip.IsIPv6Teredo)
-                {
-                    ipList += ", " + ip.ToString();
-                }
-            }
-            lblMyIP.Text = ipList.Substring(2);
+            lblMyIP.Text = GetLocalIP();
             lblNumNeighbors.Text = myNeighbors.GetListOfNeighbors().Count.ToString();
             lblNumShared.Text = myFiles.GetNumberOfFiles().ToString();
         }
 
+        private String GetLocalIP()
+        {
+            IPHostEntry host;
+            string localIP = "?";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress ip in host.AddressList)
+            {
+                if (ip.AddressFamily.ToString() == "InterNetwork")
+                {
+                    localIP = ip.ToString();
+                }
+            }
+            return localIP;
+        }
         private void btnSearch_Click(object sender, EventArgs e)
         {
             fileSearchForm.ShowDialog();
@@ -81,6 +86,12 @@ namespace serverless_fileshare
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             myFiles.Save();
+        }
+
+        private void addNeighborToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddNeighborForm addnb = new AddNeighborForm(myNeighbors);
+            addnb.ShowDialog();
         }
 
     }

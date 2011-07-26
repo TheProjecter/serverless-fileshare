@@ -52,6 +52,12 @@
     <Compile Include="AddFilesToShare.Designer.cs">
       <DependentUpon>AddFilesToShare.cs</DependentUpon>
     </Compile>
+    <Compile Include="AddNeighborForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AddNeighborForm.Designer.cs">
+      <DependentUpon>AddNeighborForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="FileSaver.cs" />
     <Compile Include="FileSearchForm.cs">
       <SubType>Form</SubType>
@@ -81,6 +87,9 @@
     <Compile Include="SFPacketType.cs" />
     <EmbeddedResource Include="AddFilesToShare.resx">
       <DependentUpon>AddFilesToShare.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AddNeighborForm.resx">
+      <DependentUpon>AddNeighborForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FileSearchForm.resx">
       <DependentUpon>FileSearchForm.cs</DependentUpon>

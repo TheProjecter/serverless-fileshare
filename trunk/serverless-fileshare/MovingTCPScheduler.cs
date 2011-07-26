@@ -27,7 +27,7 @@ namespace serverless_fileshare
 
             fileTransferDB = new PendingFileTransferDB();
             _portListeners = new PortListener[3];
-            _portChangeClock.Interval = Properties.Settings.Default.PortChangeInterval;
+            _portChangeClock.Interval = Properties.Settings.Default.PortChangeInterval*60*1000;
             _portChangeClock.Tick += new EventHandler(timer_Tick);
             outboundManager = new OutboundManager(this);
             _sorter = new PacketSorter(myFiles,this);
@@ -36,7 +36,7 @@ namespace serverless_fileshare
 
         public void Start()
         {
-           // _portChangeClock.Start();
+            //_portChangeClock.Start();
             UpdateListeners();
         }
 
@@ -48,8 +48,20 @@ namespace serverless_fileshare
 
         public void SendPacket(SFPacket packet, IPAddress destination)
         {
-            try
-            {
+            ParameterizedThreadStart ts = new ParameterizedThreadStart(ThreadedPacketSend);
+            Thread td = new Thread(ts);
+            object[] obj = { packet,destination };
+            //td.Start(obj);
+            ThreadedPacketSend(obj);
+        }
+
+        private void ThreadedPacketSend(object parameters)
+        {
+            object[] parms = (object[])parameters;
+            SFPacket packet = (SFPacket)parms[0];
+            IPAddress destination =(IPAddress) parms[1];
+            //try
+            //{
                 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 IPEndPoint destip = new IPEndPoint(destination, _portFinder.GetCurrentPort());
                 socket.Connect(destip);
@@ -71,32 +83,45 @@ namespace serverless_fileshare
                 {
                     _unreachableNeighbors.Remove(destination.ToString());
                 }
-            }
+            /*
+             * }
             catch (Exception ex)
             {
                 //Keep track of when to quit retrying send. Otherwise if  person goes offline this will run forever.
                 //Resolved infinate retrying. Will now only retry for 30 secs, in 50 ms intervals....
-                
-                if (!_unreachableNeighbors.ContainsKey(destination.ToString()))
+                try
                 {
-                    _unreachableNeighbors.Add(destination.ToString(), DateTime.Now);
-                    Thread.Sleep(50);
-                    SendPacket(packet, destination);
-                }
-                else
-                {
-                    TimeSpan offlineFor = new TimeSpan(DateTime.Now.Ticks - _unreachableNeighbors[destination.ToString()].Ticks);
-                    if (offlineFor.TotalSeconds > 30)
+                    if (!_unreachableNeighbors.ContainsKey(destination.ToString()))
                     {
-                        throw new Exception("Destination " + destination.ToString() + " is unreachable");
-                    }
-                    else
-                    {
+                        _unreachableNeighbors.Add(destination.ToString(), DateTime.Now);
                         Thread.Sleep(50);
                         SendPacket(packet, destination);
                     }
+                    else
+                    {
+                        TimeSpan offlineFor = new TimeSpan(DateTime.Now.Ticks - _unreachableNeighbors[destination.ToString()].Ticks);
+                        if (offlineFor.TotalSeconds > 30)
+                        {
+                            throw new Exception("Destination " + destination.ToString() + " is unreachable");
+                        }
+                        else
+                        {
+                            Thread.Sleep(50);
+                            SendPacket(packet, destination);
+                        }
+                    }
                 }
+                catch (Exception)
+                {
+                    //TODO: Since this is threaded _unreachableNeighbors can throw an
+                    // exception when trying to add a key when it exists already (added
+                    // by another thread). Need a semaphore type method since this can
+                    // add delays catching exceptions constantly
+
+                }
+             
             }
+             */
         }
 
 
