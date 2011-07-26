@@ -23,11 +23,12 @@ namespace serverless_fileshare
         /// <param name="port">Port number to listen on</param>
         public PortListener(IPAddress ip, Int32 port,PacketSorter sorter)
         {
+            /*
             int maxConnections=Properties.Settings.Default.MaxIncomingConnections*1000;
             ThreadPool.SetMaxThreads(maxConnections, 
                 maxConnections*2);
             ThreadPool.SetMinThreads(maxConnections, maxConnections);
-
+            */
 
             // Set the TcpListener IP & Port.
             _localIp = ip;
@@ -49,7 +50,7 @@ namespace serverless_fileshare
         {
             TcpListener _listener = new TcpListener(_localIp, _port);
             _keepListening = true;
-            _listener.Start(1000);
+            _listener.Start(100000);
 
             Console.WriteLine("Starting server...\n");
             Console.WriteLine("Listening on {0}:{1}...", _localIp, _port);
@@ -62,9 +63,9 @@ namespace serverless_fileshare
 
                 //create a thread to handle communication 
                 //with connected client
-                ProcessRequest(client);
-                //Thread clientThread = new Thread(new ParameterizedThreadStart(ProcessRequest));
-                //clientThread.Start(client);
+                //ProcessRequest(client);
+                Thread clientThread = new Thread(new ParameterizedThreadStart(ProcessRequest));
+                clientThread.Start(client);
             }
 
             _listener.Stop();
@@ -85,7 +86,7 @@ namespace serverless_fileshare
             TcpClient tcpClient = (TcpClient)client;
             NetworkStream clientStream = tcpClient.GetStream();
 
-            //TODO: Define a chunk size... 4Kb packets isn't much...
+
             byte[] message = new byte[msgSize];
             int bytesRead=0;
 

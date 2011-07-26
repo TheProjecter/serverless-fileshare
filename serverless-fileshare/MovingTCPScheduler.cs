@@ -60,8 +60,8 @@ namespace serverless_fileshare
             object[] parms = (object[])parameters;
             SFPacket packet = (SFPacket)parms[0];
             IPAddress destination =(IPAddress) parms[1];
-            //try
-            //{
+            try
+            {
                 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 IPEndPoint destip = new IPEndPoint(destination, _portFinder.GetCurrentPort());
                 socket.Connect(destip);
@@ -83,14 +83,16 @@ namespace serverless_fileshare
                 {
                     _unreachableNeighbors.Remove(destination.ToString());
                 }
-            /*
-             * }
+            }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
+                Thread.Sleep(50);
+                SendPacket(packet, destination);
+                /*
                 //Keep track of when to quit retrying send. Otherwise if  person goes offline this will run forever.
                 //Resolved infinate retrying. Will now only retry for 30 secs, in 50 ms intervals....
-                try
-                {
+                
                     if (!_unreachableNeighbors.ContainsKey(destination.ToString()))
                     {
                         _unreachableNeighbors.Add(destination.ToString(), DateTime.Now);
@@ -110,18 +112,11 @@ namespace serverless_fileshare
                             SendPacket(packet, destination);
                         }
                     }
-                }
-                catch (Exception)
-                {
-                    //TODO: Since this is threaded _unreachableNeighbors can throw an
-                    // exception when trying to add a key when it exists already (added
-                    // by another thread). Need a semaphore type method since this can
-                    // add delays catching exceptions constantly
-
-                }
+                
+                 */
              
             }
-             */
+             
         }
 
 
