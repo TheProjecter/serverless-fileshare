@@ -67,6 +67,10 @@ namespace serverless_fileshare
                     dataleft -= sent;
                 }
                 socket.Close();
+                if (_unreachableNeighbors.ContainsKey(destination.ToString()))
+                {
+                    _unreachableNeighbors.Remove(destination.ToString());
+                }
             }
             catch (Exception ex)
             {
