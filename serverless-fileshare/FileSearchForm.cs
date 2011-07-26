@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Net;
 using System.Collections;
+using System.IO;
 
 namespace serverless_fileshare
 {
@@ -54,6 +55,7 @@ namespace serverless_fileshare
             {
                 foreach (MyFile file in fileHash.FileList)
                 {
+                    file.ip = neighbor;
                     string[] folders = file.FileLoc.Split('\\');
                     for (int i = 0; i < folders.Count(); i++)
                     {
@@ -91,26 +93,7 @@ namespace serverless_fileshare
                             tnParent.Nodes.Add(directory);
                         }
                     }
-                    //file.ip = neighbor;
-                    //fullResults.Add(file);
-                    //DataGridViewRow row = new DataGridViewRow();
 
-                    //DataGridViewCell namecell = new DataGridViewTextBoxCell();
-                    //namecell.Value = file.FileLoc;
-                    //row.Cells.Add(namecell);
-
-                    //DataGridViewCell nebcell = new DataGridViewTextBoxCell();
-                    //nebcell.Value = neighbor.ToString();
-                    //row.Cells.Add(nebcell);
-
-                    ////Threadsafe... Almost
-                    //this.Invoke(new MethodInvoker(
-                    //    delegate()
-                    //        {
-                    //            gvQueryResults.Rows.Add(row);
-                    //        }));
-        
-                    
                 }
             }
             //Threadsafe... Almost
@@ -118,7 +101,24 @@ namespace serverless_fileshare
                 delegate()
                 {
                     tvResults.Nodes.Add(tnNeighbor);
+                    TreeNode node = tnNeighbor;
+                    while (node.Nodes.Count == 1)
+                    {
+                        node.Expand();
+                        if (node.NextNode != null)
+                            node = node.NextNode;
+                        else
+                            node = node.Nodes[0];
+                    }
+
+                    foreach (TreeNode child in tvResults.Nodes)
+                    {
+                        if (child.Nodes.Count == 0)
+                            child.Remove();
+                    }
                 }));
+
+            
             
         }
 
@@ -144,32 +144,42 @@ namespace serverless_fileshare
             //    }
             //}
             
-            System.Threading.ThreadStart ts = new System.Threading.ThreadStart(StartDownload);
+            System.Threading.ParameterizedThreadStart ts = new System.Threading.ParameterizedThreadStart(StartDownload);
             System.Threading.Thread thread = new System.Threading.Thread(ts);
-            thread.Start();
+            thread.Start((object)tvResults.SelectedNode);
             
         }
 
-        private void StartDownload()
+        private void StartDownload(object parameter)
         {
-            TreeNode tnDownload = tvResults.SelectedNode;
-            DownloadFiles(tnDownload);
+            TreeNode tnDownload = (TreeNode)parameter;
+            String folder="";
+            DownloadFiles(tnDownload,folder);
         }
 
-        private void DownloadFiles(TreeNode tnDownload)
+        /// <summary>
+        /// Downloads the given tree node (and everything in it)
+        /// </summary>
+        /// <param name="tnDownload">Treenode to parse and download</param>
+        /// <param name="builtDirectory">Built path </param>
+        private void DownloadFiles(TreeNode tnDownload,String builtDirectory)
         {
-            if (tnDownload.Nodes == null)
+            if (tnDownload.Nodes.Count==0)
             {
                 MyFile file = (MyFile)tnDownload.Tag;
                 String directory = Properties.Settings.Default.DownloadDirectory;
-                fileTransferDB.AddPendingFile(new PendingFile(file.FileNumber, directory + file.FileName, file.ip.ToString()));
+                String savingDir = directory + builtDirectory;
+                if (!Directory.Exists(savingDir))
+                    Directory.CreateDirectory(savingDir);
+                fileTransferDB.AddPendingFile(new PendingFile(file.FileNumber,savingDir+  file.FileName, file.ip.ToString()));
                 outbound.SendFileDownloadRequest(file.FileNumber, file.ip);
             }
             else
             {
                 foreach (TreeNode tn in tnDownload.Nodes)
                 {
-                    DownloadFiles(tn);
+                    
+                    DownloadFiles(tn,builtDirectory +tnDownload.Text+"\\");
                 }
             }
         }

@@ -26,9 +26,9 @@ namespace serverless_fileshare
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public PendingFile GetPendingWithID(int id,String source)
+        public PendingFile GetPendingWithID(String id)
         {
-            object found= _pendingFiles[id+source];
+            object found= _pendingFiles[id];
             if(found==null)
                 return null;
             return (PendingFile)found;

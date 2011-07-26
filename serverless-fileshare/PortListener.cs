@@ -23,7 +23,7 @@ namespace serverless_fileshare
         /// <param name="port">Port number to listen on</param>
         public PortListener(IPAddress ip, Int32 port,PacketSorter sorter)
         {
-            int maxConnections=Properties.Settings.Default.MaxIncomingConnections;
+            int maxConnections=Properties.Settings.Default.MaxIncomingConnections*1000;
             ThreadPool.SetMaxThreads(maxConnections, 
                 maxConnections*2);
             ThreadPool.SetMinThreads(maxConnections, maxConnections);
@@ -49,7 +49,7 @@ namespace serverless_fileshare
         {
             TcpListener _listener = new TcpListener(_localIp, _port);
             _keepListening = true;
-            _listener.Start();
+            _listener.Start(1000);
 
             Console.WriteLine("Starting server...\n");
             Console.WriteLine("Listening on {0}:{1}...", _localIp, _port);

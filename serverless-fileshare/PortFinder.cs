@@ -10,12 +10,19 @@ namespace serverless_fileshare
     /// </summary>
     class PortFinder
     {
-        int currentPort;
+        System.Windows.Forms.Timer timer;
         public PortFinder()
         {
-            currentPort = 90;
-            //TODO: Implement algorithm
+            
         }
+
+        private int GeneratePort(int day,int hour, int minute)
+        {
+            int port =Int32.Parse(day+""+hour+""+minute%4);
+
+            return port;
+        }
+
 
         /// <summary>
         /// Finds the current port number though the algorithm and returns it
@@ -23,7 +30,7 @@ namespace serverless_fileshare
         /// <returns>Current port number</returns>
         public int GetCurrentPort()
         {
-            return currentPort;
+            return 90;//GeneratePort(DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute);
         }
 
         /// <summary>
@@ -32,7 +39,8 @@ namespace serverless_fileshare
         /// <returns>next port number to use</returns>
         public int GetNextPort()
         {
-            return currentPort+1;
+            DateTime nextPortDate = DateTime.Now.AddMinutes(Properties.Settings.Default.PortChangeInterval);
+            return 91;//GeneratePort(nextPortDate.Day, nextPortDate.Hour, nextPortDate.Minute);
         }
 
         /// <summary>
@@ -41,7 +49,8 @@ namespace serverless_fileshare
         /// <returns>previous port number</returns>
         public int GetPreviousPort()
         {
-            return currentPort+2;
+            DateTime nextPortDate = DateTime.Now.AddMinutes(-Properties.Settings.Default.PortChangeInterval);
+            return 93;//GeneratePort(nextPortDate.Day, nextPortDate.Hour, nextPortDate.Minute);
         }
 
     }
