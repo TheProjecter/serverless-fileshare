@@ -49,7 +49,7 @@ namespace serverless_fileshare
         public void SendPacket(SFPacket packet, IPAddress destination)
         {
             object[] obj = { packet,destination };
-            ThreadedPacketSend(obj);
+            ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadedPacketSend), obj);
             Thread.Sleep(10);
         }
 
