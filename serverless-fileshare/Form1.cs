@@ -40,10 +40,6 @@ namespace serverless_fileshare
             refreshDataTimer.Start();
             refreshDataTimer_Tick(null, null);
 
-
-            myFiles.AddFile(@"C:\Tucker.jpg");
-            myFiles.AddFile(@"C:\Party.jpg");
-            myFiles.AddFile(@"C:\Test\from\300.avi");
             myNeighbors.AddNeighbor("172.16.1.100");
         }
 
