@@ -48,15 +48,15 @@ namespace serverless_fileshare
 
         public void SendPacket(SFPacket packet, IPAddress destination)
         {
-            ParameterizedThreadStart ts = new ParameterizedThreadStart(ThreadedPacketSend);
-            Thread td = new Thread(ts);
             object[] obj = { packet,destination };
-            //td.Start(obj);
             ThreadedPacketSend(obj);
+            Thread.Sleep(10);
         }
 
         private void ThreadedPacketSend(object parameters)
         {
+            
+
             object[] parms = (object[])parameters;
             SFPacket packet = (SFPacket)parms[0];
             IPAddress destination =(IPAddress) parms[1];
@@ -122,7 +122,7 @@ namespace serverless_fileshare
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            UpdateListeners();
+            //UpdateListeners();
         }
         
 

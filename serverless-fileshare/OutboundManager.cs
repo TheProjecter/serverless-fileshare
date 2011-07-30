@@ -22,10 +22,11 @@ namespace serverless_fileshare
         public void SendFile(int fileID,String file, IPAddress destination)
         {
 
-            ParameterizedThreadStart ts = new ParameterizedThreadStart(ThreadedSendFile);
-            Thread td = new Thread(ts);
+            //ParameterizedThreadStart ts = new ParameterizedThreadStart(ThreadedSendFile);
+            //Thread td = new Thread(ts);
             object[] obj = {fileID, file, destination };
-            td.Start(obj);
+            //td.Start(obj);
+            ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadedSendFile), obj);
         }
 
         private void ThreadedSendFile(object parameters)
