@@ -124,25 +124,12 @@ namespace serverless_fileshare
             
         }
 
-        //private void gvQueryResults_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        //{
-        //    //If it is a right click
-        //    if (e.Button == MouseButtons.Right)
-        //    {
-        //        cmsTableRightclick.Show(System.Windows.Forms.Cursor.Position);
-        //    }
-        //}
-
         private void downloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             
             
-            /*System.Threading.ParameterizedThreadStart ts = new System.Threading.ParameterizedThreadStart(StartDownload);
-            System.Threading.Thread thread = new System.Threading.Thread(ts);
-            thread.Start((object)tvResults.SelectedNode);
-            */
-            //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(StartDownload), tvResults.SelectedNode);
-            StartDownload(tvResults.SelectedNode);
+            System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(StartDownload), tvResults.SelectedNode);
+            //StartDownload(tvResults.SelectedNode);
         }
 
         private void StartDownload(object parameter)

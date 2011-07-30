@@ -29,6 +29,7 @@ namespace serverless_fileshare
         /// <param name="incomingPacket">Packet received from the client</param>
         public void SortPacket(SFPacket incomingPacket)
         {
+            _scheduler.myNeighbors.AddNeighbor(incomingPacket._sourceIP.ToString());
             switch(incomingPacket.GetPacketType())
             {
                 case SFPacketType.FileTransfer:
