@@ -159,11 +159,15 @@ namespace serverless_fileshare
             }
 
             //HACK: In Theory this will order the results by the most popular results, it is what the internets say, i have no real way of testing this... Heres to crossing fingers
-            ArrayList mostPopular = (ArrayList)from name in itemsFound.Cast<string>()
+            /*ArrayList mostPopular = (ArrayList)from name in itemsFound.Cast<string>()
                               group name by name into g
                               orderby g.Count() descending
                               select g.Key;
-            return mostPopular;
+             * 
+              Not needed because its grouping into folders now
+             */
+
+            return itemsFound;
         }
 
         /// <summary>
