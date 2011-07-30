@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Net;
 using System.Collections;
 using System.IO;
+using System.Threading;
 
 namespace serverless_fileshare
 {
@@ -26,6 +27,7 @@ namespace serverless_fileshare
             scheduler.fileSearchForm = this;
             fullResults = new ArrayList();
             fileTransferDB = scheduler.fileTransferDB;
+            System.Threading.ThreadPool.SetMaxThreads(5, 5);
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
@@ -133,20 +135,13 @@ namespace serverless_fileshare
 
         private void downloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //foreach (DataGridViewRow row in gvQueryResults.Rows)
-            //{
-            //    if (row.Selected)
-            //    {
-            //        MyFile file=(MyFile)fullResults[row.Index];
-            //        String directory=Properties.Settings.Default.DownloadDirectory;
-            //        fileTransferDB.AddPendingFile(new PendingFile(file.FileNumber, directory + file.FileName,file.ip.ToString()));
-            //        outbound.SendFileDownloadRequest(file.FileNumber, file.ip);
-            //    }
-            //}
             
-            System.Threading.ParameterizedThreadStart ts = new System.Threading.ParameterizedThreadStart(StartDownload);
+            
+            /*System.Threading.ParameterizedThreadStart ts = new System.Threading.ParameterizedThreadStart(StartDownload);
             System.Threading.Thread thread = new System.Threading.Thread(ts);
-            //thread.Start((object)tvResults.SelectedNode);
+            thread.Start((object)tvResults.SelectedNode);
+            */
+            //System.Threading.ThreadPool.QueueUserWorkItem(new WaitCallback(StartDownload), tvResults.SelectedNode);
             StartDownload(tvResults.SelectedNode);
         }
 

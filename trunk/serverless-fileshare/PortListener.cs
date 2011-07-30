@@ -23,12 +23,11 @@ namespace serverless_fileshare
         /// <param name="port">Port number to listen on</param>
         public PortListener(IPAddress ip, Int32 port,PacketSorter sorter)
         {
-            /*
-            int maxConnections=Properties.Settings.Default.MaxIncomingConnections*1000;
+            
+            int maxConnections=Properties.Settings.Default.MaxIncomingConnections;
             ThreadPool.SetMaxThreads(maxConnections, 
                 maxConnections*2);
             ThreadPool.SetMinThreads(maxConnections, maxConnections);
-            */
 
             // Set the TcpListener IP & Port.
             _localIp = ip;
@@ -63,9 +62,10 @@ namespace serverless_fileshare
 
                 //create a thread to handle communication 
                 //with connected client
-                //ProcessRequest(client);
-                Thread clientThread = new Thread(new ParameterizedThreadStart(ProcessRequest));
-                clientThread.Start(client);
+                ProcessRequest(client);
+                //ThreadPool.QueueUserWorkItem(new WaitCallback(ProcessRequest), client);
+                //Thread clientThread = new Thread(new ParameterizedThreadStart(ProcessRequest));
+                //clientThread.Start(client);
             }
 
             _listener.Stop();
@@ -113,14 +113,18 @@ namespace serverless_fileshare
                 }
 
             }
+            
             SFPacket packet = new SFPacket(message, bytesRead);
             String ip = tcpClient.Client.RemoteEndPoint.ToString();
             packet._sourceIP =IPAddress.Parse(ip.Substring(0,ip.IndexOf(':')));
             packetsReceived++;
-            _sorter.SortPacket(packet);
-            Console.WriteLine("Received: " + bytesRead);
-
+            clientStream.Close();
             tcpClient.Close();
+
+            _sorter.SortPacket(packet);
+
+            Console.WriteLine("Received: " + bytesRead);
+          
         }
     }
 
