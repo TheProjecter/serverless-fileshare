@@ -66,12 +66,12 @@ namespace serverless_fileshare
         }
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            fileSearchForm.ShowDialog();
+            fileSearchForm.Show();
         }
 
         private void shareFIlesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            filesToShareForm.ShowDialog();
+            filesToShareForm.Show();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)

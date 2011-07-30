@@ -38,27 +38,31 @@ namespace serverless_fileshare
         /// <param name="directory">Current Directory To Search</param>
         private void addDirectory(String directory)
         {
-            foreach (String file in Directory.GetFiles(directory))
+            try
             {
-                myFilesDb.AddFile(file);
-                DataGridViewRow row = new DataGridViewRow();
-                DataGridViewTextBoxCell cell = new DataGridViewTextBoxCell();
-                cell.Value = "Hashed: " + file;
-                row.Cells.Add(cell);
-                if(isShown && !gvLog.IsDisposed && !this.IsDisposed)
+                foreach (String file in Directory.GetFiles(directory))
                 {
-                    try
+                    myFilesDb.AddFile(file);
+                    DataGridViewRow row = new DataGridViewRow();
+                    DataGridViewTextBoxCell cell = new DataGridViewTextBoxCell();
+                    cell.Value = "Hashed: " + file;
+                    row.Cells.Add(cell);
+                    if (isShown && !gvLog.IsDisposed && !this.IsDisposed)
                     {
-                        this.Invoke(new MethodInvoker(
-                                delegate()
-                                {
-                                    gvLog.Rows.Insert(0, row);
-                                }));
+                        try
+                        {
+                            this.Invoke(new MethodInvoker(
+                                    delegate()
+                                    {
+                                        gvLog.Rows.Insert(0, row);
+                                    }));
+                        }
+                        catch { isShown = false; }
                     }
-                    catch { isShown = false; }
-                }
 
+                }
             }
+            catch { }
 
             foreach (String nextDir in Directory.GetDirectories(directory))
             {
