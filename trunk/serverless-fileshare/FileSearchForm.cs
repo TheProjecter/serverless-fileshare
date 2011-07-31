@@ -98,27 +98,31 @@ namespace serverless_fileshare
 
                 }
             }
-            //Threadsafe... Almost
-            this.Invoke(new MethodInvoker(
-                delegate()
-                {
-                    tvResults.Nodes.Add(tnNeighbor);
-                    TreeNode node = tnNeighbor;
-                    while (node.Nodes.Count == 1)
+            try
+            {
+                //Threadsafe... Almost
+                this.Invoke(new MethodInvoker(
+                    delegate()
                     {
-                        node.Expand();
-                        if (node.NextNode != null)
-                            node = node.NextNode;
-                        else
-                            node = node.Nodes[0];
-                    }
+                        tvResults.Nodes.Add(tnNeighbor);
+                        TreeNode node = tnNeighbor;
+                        while (node.Nodes.Count == 1)
+                        {
+                            node.Expand();
+                            if (node.NextNode != null)
+                                node = node.NextNode;
+                            else
+                                node = node.Nodes[0];
+                        }
 
-                    foreach (TreeNode child in tvResults.Nodes)
-                    {
-                        if (child.Nodes.Count == 0)
-                            child.Remove();
-                    }
-                }));
+                        foreach (TreeNode child in tvResults.Nodes)
+                        {
+                            if (child.Nodes.Count == 0)
+                                child.Remove();
+                        }
+                    }));
+            }
+            catch { }
 
             
             

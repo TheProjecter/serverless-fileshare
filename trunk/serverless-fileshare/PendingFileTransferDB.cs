@@ -13,6 +13,7 @@ namespace serverless_fileshare
         public PendingFileTransferDB()
         {
             _pendingFiles = new Hashtable();
+            _completedTransfers = new ArrayList();
         }
 
         public void AddPendingFile(PendingFile pFile)
