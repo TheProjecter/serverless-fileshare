@@ -89,6 +89,15 @@ namespace serverless_fileshare
             }
             return localIP;
         }
+
+        private void StopEverything()
+        {
+            myFiles.Save();
+            scheduler.Stop();
+        }
+
+        #region Event Handlers
+
         private void btnSearch_Click(object sender, EventArgs e)
         {
             fileSearchForm.Show();
@@ -101,13 +110,17 @@ namespace serverless_fileshare
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            StopEverything();
             Application.Exit();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            myFiles.Save();
+            StopEverything();
+            Application.Exit();
         }
+
+        
 
         private void addNeighborToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -115,5 +128,14 @@ namespace serverless_fileshare
             addnb.ShowDialog();
         }
 
+        private void btnViewCompleted_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+        #endregion
+
+        
     }
 }

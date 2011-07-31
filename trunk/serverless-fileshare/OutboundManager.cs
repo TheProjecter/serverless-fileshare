@@ -14,9 +14,12 @@ namespace serverless_fileshare
     public class OutboundManager
     {
         MovingTCPScheduler _scheduler;
+        ArrayList _filesToSend;
         public OutboundManager(MovingTCPScheduler scheduler)
         {
             _scheduler = scheduler;
+            //TODO: Keep track of files queued to send
+            _filesToSend = new ArrayList();
         }
 
         public void SendFile(int fileID,String file, IPAddress destination)

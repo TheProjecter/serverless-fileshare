@@ -54,7 +54,11 @@ namespace serverless_fileshare
                     PendingFileQueue pfq = new PendingFileQueue(data, id, GetFileLoc(fileID, source));
                     pendingFileQueue.Add(fileID, pfq);
                 }
-                catch { ((PendingFileQueue)pendingFileQueue[fileID]).AddPacket(data); }
+                catch(Exception ex)
+                { 
+
+                    ((PendingFileQueue)pendingFileQueue[fileID]).AddPacket(data); 
+                }
             }
         }
 
