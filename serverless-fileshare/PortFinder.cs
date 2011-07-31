@@ -18,8 +18,10 @@ namespace serverless_fileshare
 
         private int GeneratePort(int day,int hour, int minute)
         {
-            int port =Int32.Parse(day+""+hour+""+minute%4);
-
+            int minuteSection=minute / Properties.Settings.Default.PortChangeInterval+1;
+            int port =Int32.Parse(day+""+hour+""+minuteSection);
+            while(port.ToString().Length > 5)
+                port =Int32.Parse(port.ToString().Substring(1, port.ToString().Length - 1));
             return port;
         }
 
@@ -30,7 +32,7 @@ namespace serverless_fileshare
         /// <returns>Current port number</returns>
         public int GetCurrentPort()
         {
-            return 90;//GeneratePort(DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute);
+            return GeneratePort(DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute);
         }
 
         /// <summary>
@@ -40,7 +42,7 @@ namespace serverless_fileshare
         public int GetNextPort()
         {
             DateTime nextPortDate = DateTime.Now.AddMinutes(Properties.Settings.Default.PortChangeInterval);
-            return 91;//GeneratePort(nextPortDate.Day, nextPortDate.Hour, nextPortDate.Minute);
+            return GeneratePort(nextPortDate.Day, nextPortDate.Hour, nextPortDate.Minute);
         }
 
         /// <summary>
@@ -50,7 +52,7 @@ namespace serverless_fileshare
         public int GetPreviousPort()
         {
             DateTime nextPortDate = DateTime.Now.AddMinutes(-Properties.Settings.Default.PortChangeInterval);
-            return 93;//GeneratePort(nextPortDate.Day, nextPortDate.Hour, nextPortDate.Minute);
+            return GeneratePort(nextPortDate.Day, nextPortDate.Hour, nextPortDate.Minute);
         }
 
     }

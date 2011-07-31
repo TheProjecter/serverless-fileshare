@@ -40,7 +40,13 @@ namespace serverless_fileshare
             refreshDataTimer.Start();
             refreshDataTimer_Tick(null, null);
 
-            myNeighbors.AddNeighbor("172.16.1.100");
+
+            if (myNeighbors.GetListOfNeighbors().Count == 0)
+            {
+                MessageBox.Show("Hello, you must be new here...\n\nYou must enter the IP address of someone already in the neighborhood to join.\n\nOnce you are connected go to File>Hash Files to begin sharing and search for filesfrom the main screen.");
+                AddNeighborForm addnb = new AddNeighborForm(myNeighbors);
+                addnb.ShowDialog();
+            }
         }
 
         void refreshDataTimer_Tick(object sender, EventArgs e)
@@ -48,6 +54,25 @@ namespace serverless_fileshare
             lblMyIP.Text = GetLocalIP();
             lblNumNeighbors.Text = myNeighbors.GetListOfNeighbors().Count.ToString();
             lblNumShared.Text = myFiles.GetNumberOfFiles().ToString();
+
+            if (scheduler.fileTransferDB.GetPendingFileCount() != gvCurrentDownloads.Rows.Count)
+            {
+                gvCurrentDownloads.Rows.Clear();
+                foreach (PendingFile pf in scheduler.fileTransferDB.GetPendingFileList())
+                {
+                    DataGridViewRow row = new DataGridViewRow();
+                    DataGridViewTextBoxCell cell = new DataGridViewTextBoxCell();
+                    cell.Value = pf.fileLocation;
+                    row.Cells.Add(cell);
+
+                    cell = new DataGridViewTextBoxCell();
+                    cell.Value = pf.Source;
+                    row.Cells.Add(cell);
+
+                    gvCurrentDownloads.Rows.Add(row);
+
+                }
+            }
         }
 
         private String GetLocalIP()

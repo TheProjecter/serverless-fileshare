@@ -36,8 +36,11 @@ namespace serverless_fileshare
 
         public void Start()
         {
-            //_portChangeClock.Start();
-            UpdateListeners();
+            _portChangeClock.Start();
+            _portListeners[0] = new PortListener(IPAddress.Any, _portFinder.GetPreviousPort(), _sorter);
+            _portListeners[1] = new PortListener(IPAddress.Any, _portFinder.GetCurrentPort(), _sorter);
+            _portListeners[2] = new PortListener(IPAddress.Any, _portFinder.GetNextPort(), _sorter);
+            StartListeners();
         }
 
         public void Stop()
@@ -122,19 +125,17 @@ namespace serverless_fileshare
 
         private void timer_Tick(object sender, EventArgs e)
         {
-            //UpdateListeners();
+            UpdateListeners();
         }
         
 
         private void UpdateListeners()
         {
-            StopListeners();
-
-            _portListeners[0] = new PortListener(IPAddress.Any, _portFinder.GetPreviousPort(),_sorter);
-            _portListeners[1] = new PortListener(IPAddress.Any, _portFinder.GetCurrentPort(),_sorter);
-            _portListeners[2] = new PortListener(IPAddress.Any, _portFinder.GetNextPort(),_sorter);
-
-            StartListeners();
+            ((PortListener)_portListeners[0]).Stop();
+            _portListeners[0] = _portListeners[1];
+            _portListeners[1] = _portListeners[2];
+            _portListeners[2] = new PortListener(IPAddress.Any, _portFinder.GetNextPort(), _sorter);
+            ((PortListener)_portListeners[2]).Start();
         }
 
         private void StartListeners()

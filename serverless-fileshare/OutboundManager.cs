@@ -64,6 +64,12 @@ namespace serverless_fileshare
                     packetsSent++;
                 }
 
+                byte[] bytes = Encoding.ASCII.GetBytes("EOT");
+                byte[] EOT = ShiftBytes(fileID, bytes);
+                SFPacket eotPacket = new SFPacket(SFPacketType.FileTransfer, EOT);
+                _scheduler.SendPacket(eotPacket, destination);
+                packetsSent++;
+
                 br.Close();
                 System.Console.WriteLine("Packets Sent: " + packetsSent);
             /*}

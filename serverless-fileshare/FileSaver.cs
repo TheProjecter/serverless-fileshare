@@ -15,8 +15,6 @@ namespace serverless_fileshare
         public FileSaver(MyFilesDB myFiles, PendingFileTransferDB pendingFileTransferDB)
         {
             _myFiles = myFiles;
-
-            //TODO: Load pendingFileTransfers from DB
             _pendingFileTransferDB = pendingFileTransferDB;
             pendingFileQueue = new Hashtable();
         }
@@ -34,7 +32,20 @@ namespace serverless_fileshare
             String fileID =id +source;
             if (pendingFileQueue.ContainsKey(fileID))
             {
-                ((PendingFileQueue)pendingFileQueue[fileID]).AddPacket(data);
+                if (data.Length > 10)
+                {
+                    ((PendingFileQueue)pendingFileQueue[fileID]).AddPacket(data);
+                }
+                else
+                {
+                    byte[] trimmed=new byte[data.Length-1];
+                    data.CopyTo(trimmed, 1);
+                    String fileText= System.Text.Encoding.ASCII.GetString(trimmed);
+                    if (fileText == "EOT")
+                    {
+                        _pendingFileTransferDB.MarkPendingAsComplete(fileID);
+                    }
+                }
             }
             else
             {
