@@ -230,7 +230,7 @@ namespace serverless_fileshare
 
         public MyFile(SerializationInfo info, StreamingContext ctxt)
         {
-            FileName = (String)info.GetValue("FileName", typeof(int));
+            FileName = (String)info.GetValue("FileName", typeof(string));
             FileLoc = (String)info.GetValue("FileLoc", typeof(string));
         }
 

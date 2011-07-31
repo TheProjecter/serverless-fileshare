@@ -35,6 +35,8 @@ namespace serverless_fileshare
             _sorter = sorter;
         }
 
+        public int GetPortNumber() { return _port; }
+
         public Boolean isStarted() { return _keepListening; }
 
         /// <summary>
@@ -64,8 +66,8 @@ namespace serverless_fileshare
 
                 //create a thread to handle communication 
                 //with connected client
-                //ProcessRequest(client);
-                ThreadPool.QueueUserWorkItem(new WaitCallback(ProcessRequest), client);
+                ProcessRequest(client);
+                //ThreadPool.QueueUserWorkItem(new WaitCallback(ProcessRequest), client);
                 //Thread clientThread = new Thread(new ParameterizedThreadStart(ProcessRequest));
                 //clientThread.Start(client);
             }

@@ -27,7 +27,7 @@ namespace serverless_fileshare
 
             fileTransferDB = new PendingFileTransferDB();
             _portListeners = new PortListener[3];
-            _portChangeClock.Interval = Properties.Settings.Default.PortChangeInterval*60*1000;
+            _portChangeClock.Interval = (Properties.Settings.Default.PortChangeInterval*50*1000)/2;
             _portChangeClock.Tick += new EventHandler(timer_Tick);
             outboundManager = new OutboundManager(this);
             _sorter = new PacketSorter(myFiles,this);
@@ -47,6 +47,8 @@ namespace serverless_fileshare
         {
             _portChangeClock.Stop();
             StopListeners();
+            fileTransferDB.Save();
+            myNeighbors.Save();
         }
 
         public void SendPacket(SFPacket packet, IPAddress destination)
@@ -131,12 +133,15 @@ namespace serverless_fileshare
 
         private void UpdateListeners()
         {
-            ((PortListener)_portListeners[0]).Stop();
-            _portListeners[0] = _portListeners[1];
-            _portListeners[1] = _portListeners[2];
-            _portListeners[2] = new PortListener(IPAddress.Any, _portFinder.GetNextPort(), _sorter);
-            ((PortListener)_portListeners[2]).Start();
-            StartListeners();
+            if (_portListeners[1].GetPortNumber() != _portFinder.GetCurrentPort())
+            {
+                ((PortListener)_portListeners[0]).Stop();
+                _portListeners[0] = _portListeners[1];
+                _portListeners[1] = _portListeners[2];
+                _portListeners[2] = new PortListener(IPAddress.Any, _portFinder.GetNextPort(), _sorter);
+                ((PortListener)_portListeners[2]).Start();
+                StartListeners();
+            }
         }
 
         private void StartListeners()

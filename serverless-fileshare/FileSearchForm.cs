@@ -179,5 +179,11 @@ namespace serverless_fileshare
             }
         }
 
+        private void FileSearchForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
+        }
+
     }
 }

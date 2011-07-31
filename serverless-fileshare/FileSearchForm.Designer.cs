@@ -87,6 +87,7 @@
             this.Controls.Add(this.tbQuery);
             this.Name = "FileSearchForm";
             this.Text = "FileSearchForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FileSearchForm_FormClosing);
             this.cmsTableRightclick.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

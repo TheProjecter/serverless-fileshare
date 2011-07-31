@@ -41,9 +41,9 @@
             this.lblNumShared = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.gvCurrentDownloads = new System.Windows.Forms.DataGridView();
-            this.lblDownloadsText = new System.Windows.Forms.Label();
             this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Source = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lblDownloadsText = new System.Windows.Forms.Label();
             this.btnViewCompleted = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gvCurrentDownloads)).BeginInit();
@@ -82,21 +82,21 @@
             // shareFIlesToolStripMenuItem
             // 
             this.shareFIlesToolStripMenuItem.Name = "shareFIlesToolStripMenuItem";
-            this.shareFIlesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.shareFIlesToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.shareFIlesToolStripMenuItem.Text = "Hash Files";
             this.shareFIlesToolStripMenuItem.Click += new System.EventHandler(this.shareFIlesToolStripMenuItem_Click);
             // 
             // addNeighborToolStripMenuItem
             // 
             this.addNeighborToolStripMenuItem.Name = "addNeighborToolStripMenuItem";
-            this.addNeighborToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.addNeighborToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.addNeighborToolStripMenuItem.Text = "Add Neighbor";
             this.addNeighborToolStripMenuItem.Click += new System.EventHandler(this.addNeighborToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -167,15 +167,6 @@
             this.gvCurrentDownloads.Size = new System.Drawing.Size(429, 120);
             this.gvCurrentDownloads.TabIndex = 8;
             // 
-            // lblDownloadsText
-            // 
-            this.lblDownloadsText.AutoSize = true;
-            this.lblDownloadsText.Location = new System.Drawing.Point(265, 36);
-            this.lblDownloadsText.Name = "lblDownloadsText";
-            this.lblDownloadsText.Size = new System.Drawing.Size(100, 13);
-            this.lblDownloadsText.TabIndex = 9;
-            this.lblDownloadsText.Text = "Current Downloads:";
-            // 
             // FileName
             // 
             this.FileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
@@ -189,6 +180,15 @@
             this.Source.Name = "Source";
             this.Source.ReadOnly = true;
             // 
+            // lblDownloadsText
+            // 
+            this.lblDownloadsText.AutoSize = true;
+            this.lblDownloadsText.Location = new System.Drawing.Point(265, 36);
+            this.lblDownloadsText.Name = "lblDownloadsText";
+            this.lblDownloadsText.Size = new System.Drawing.Size(100, 13);
+            this.lblDownloadsText.TabIndex = 9;
+            this.lblDownloadsText.Text = "Current Downloads:";
+            // 
             // btnViewCompleted
             // 
             this.btnViewCompleted.Location = new System.Drawing.Point(569, 23);
@@ -197,6 +197,8 @@
             this.btnViewCompleted.TabIndex = 10;
             this.btnViewCompleted.Text = "View Completed";
             this.btnViewCompleted.UseVisualStyleBackColor = true;
+            this.btnViewCompleted.Visible = false;
+            this.btnViewCompleted.Click += new System.EventHandler(this.btnViewCompleted_Click);
             // 
             // Form1
             // 
