@@ -39,9 +39,9 @@ namespace serverless_fileshare
                 else
                 {
                     byte[] trimmed=new byte[data.Length-1];
-                    data.CopyTo(trimmed, 1);
+                    Array.Copy(data, 1, trimmed, 0, trimmed.Length);
                     String fileText= System.Text.Encoding.ASCII.GetString(trimmed);
-                    if (fileText == "EOT")
+                    if (fileText.EndsWith("EOT"))
                     {
                         _pendingFileTransferDB.MarkPendingAsComplete(fileID);
                     }

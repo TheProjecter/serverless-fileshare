@@ -28,12 +28,14 @@ namespace serverless_fileshare
             ThreadPool.SetMaxThreads(maxConnections, 
                 maxConnections*2);
             ThreadPool.SetMinThreads(maxConnections, maxConnections);
-
+            _keepListening = false;
             // Set the TcpListener IP & Port.
             _localIp = ip;
             _port = port;
             _sorter = sorter;
         }
+
+        public Boolean isStarted() { return _keepListening; }
 
         /// <summary>
         /// Starts the listener on a new thread
@@ -62,8 +64,8 @@ namespace serverless_fileshare
 
                 //create a thread to handle communication 
                 //with connected client
-                ProcessRequest(client);
-                //ThreadPool.QueueUserWorkItem(new WaitCallback(ProcessRequest), client);
+                //ProcessRequest(client);
+                ThreadPool.QueueUserWorkItem(new WaitCallback(ProcessRequest), client);
                 //Thread clientThread = new Thread(new ParameterizedThreadStart(ProcessRequest));
                 //clientThread.Start(client);
             }

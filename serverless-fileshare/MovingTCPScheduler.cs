@@ -136,13 +136,15 @@ namespace serverless_fileshare
             _portListeners[1] = _portListeners[2];
             _portListeners[2] = new PortListener(IPAddress.Any, _portFinder.GetNextPort(), _sorter);
             ((PortListener)_portListeners[2]).Start();
+            StartListeners();
         }
 
         private void StartListeners()
         {
             foreach (PortListener listener in _portListeners)
             {
-                listener.Start();
+                if(!listener.isStarted())
+                    listener.Start();
             }
         }
 
