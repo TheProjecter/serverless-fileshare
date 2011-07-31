@@ -58,7 +58,7 @@ namespace serverless_fileshare
                 }
                 else
                 {
-                    Thread.Sleep(5);
+                    Thread.Sleep(50);
                 }
             }
         }

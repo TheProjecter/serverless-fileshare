@@ -32,6 +32,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fIleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.shareFIlesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addNeighborToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.lblMyIP = new System.Windows.Forms.Label();
@@ -39,8 +40,13 @@
             this.label3 = new System.Windows.Forms.Label();
             this.lblNumShared = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.addNeighborToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gvCurrentDownloads = new System.Windows.Forms.DataGridView();
+            this.lblDownloadsText = new System.Windows.Forms.Label();
+            this.FileName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Source = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnViewCompleted = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gvCurrentDownloads)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSearch
@@ -59,7 +65,7 @@
             this.fIleToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(292, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(709, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -70,20 +76,27 @@
             this.addNeighborToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fIleToolStripMenuItem.Name = "fIleToolStripMenuItem";
-            this.fIleToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.fIleToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fIleToolStripMenuItem.Text = "File";
             // 
             // shareFIlesToolStripMenuItem
             // 
             this.shareFIlesToolStripMenuItem.Name = "shareFIlesToolStripMenuItem";
-            this.shareFIlesToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
-            this.shareFIlesToolStripMenuItem.Text = "Share Files";
+            this.shareFIlesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.shareFIlesToolStripMenuItem.Text = "Hash Files";
             this.shareFIlesToolStripMenuItem.Click += new System.EventHandler(this.shareFIlesToolStripMenuItem_Click);
+            // 
+            // addNeighborToolStripMenuItem
+            // 
+            this.addNeighborToolStripMenuItem.Name = "addNeighborToolStripMenuItem";
+            this.addNeighborToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.addNeighborToolStripMenuItem.Text = "Add Neighbor";
+            this.addNeighborToolStripMenuItem.Click += new System.EventHandler(this.addNeighborToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -141,18 +154,58 @@
             this.label4.TabIndex = 6;
             this.label4.Text = "# of Shared Files:";
             // 
-            // addNeighborToolStripMenuItem
+            // gvCurrentDownloads
             // 
-            this.addNeighborToolStripMenuItem.Name = "addNeighborToolStripMenuItem";
-            this.addNeighborToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.addNeighborToolStripMenuItem.Text = "Add Neighbor";
-            this.addNeighborToolStripMenuItem.Click += new System.EventHandler(this.addNeighborToolStripMenuItem_Click);
+            this.gvCurrentDownloads.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gvCurrentDownloads.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.FileName,
+            this.Source});
+            this.gvCurrentDownloads.Location = new System.Drawing.Point(268, 52);
+            this.gvCurrentDownloads.Name = "gvCurrentDownloads";
+            this.gvCurrentDownloads.ReadOnly = true;
+            this.gvCurrentDownloads.RowHeadersVisible = false;
+            this.gvCurrentDownloads.Size = new System.Drawing.Size(429, 120);
+            this.gvCurrentDownloads.TabIndex = 8;
+            // 
+            // lblDownloadsText
+            // 
+            this.lblDownloadsText.AutoSize = true;
+            this.lblDownloadsText.Location = new System.Drawing.Point(265, 36);
+            this.lblDownloadsText.Name = "lblDownloadsText";
+            this.lblDownloadsText.Size = new System.Drawing.Size(100, 13);
+            this.lblDownloadsText.TabIndex = 9;
+            this.lblDownloadsText.Text = "Current Downloads:";
+            // 
+            // FileName
+            // 
+            this.FileName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.FileName.HeaderText = "File Name";
+            this.FileName.Name = "FileName";
+            this.FileName.ReadOnly = true;
+            // 
+            // Source
+            // 
+            this.Source.HeaderText = "Source";
+            this.Source.Name = "Source";
+            this.Source.ReadOnly = true;
+            // 
+            // btnViewCompleted
+            // 
+            this.btnViewCompleted.Location = new System.Drawing.Point(569, 23);
+            this.btnViewCompleted.Name = "btnViewCompleted";
+            this.btnViewCompleted.Size = new System.Drawing.Size(128, 23);
+            this.btnViewCompleted.TabIndex = 10;
+            this.btnViewCompleted.Text = "View Completed";
+            this.btnViewCompleted.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 214);
+            this.ClientSize = new System.Drawing.Size(709, 184);
+            this.Controls.Add(this.btnViewCompleted);
+            this.Controls.Add(this.lblDownloadsText);
+            this.Controls.Add(this.gvCurrentDownloads);
             this.Controls.Add(this.lblNumShared);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.lblNumNeighbors);
@@ -168,6 +221,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gvCurrentDownloads)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -187,6 +241,11 @@
         private System.Windows.Forms.Label lblNumShared;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ToolStripMenuItem addNeighborToolStripMenuItem;
+        private System.Windows.Forms.DataGridView gvCurrentDownloads;
+        private System.Windows.Forms.DataGridViewTextBoxColumn FileName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Source;
+        private System.Windows.Forms.Label lblDownloadsText;
+        private System.Windows.Forms.Button btnViewCompleted;
 
     }
 }

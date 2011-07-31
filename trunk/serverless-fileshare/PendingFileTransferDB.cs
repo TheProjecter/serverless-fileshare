@@ -9,6 +9,7 @@ namespace serverless_fileshare
     public class PendingFileTransferDB
     {
         Hashtable _pendingFiles;
+        ArrayList _completedTransfers;
         public PendingFileTransferDB()
         {
             _pendingFiles = new Hashtable();
@@ -19,6 +20,31 @@ namespace serverless_fileshare
             String key=pFile.id+pFile.Source;
             if(!_pendingFiles.Contains(key))
             _pendingFiles.Add(key, pFile);
+        }
+
+        public void MarkPendingAsComplete(String id)
+        {
+            PendingFile pf = GetPendingWithID(id);
+            if (pf != null)
+            {
+                _completedTransfers.Add(pf);
+                _pendingFiles.Remove(id);
+            }
+        }
+
+        public ArrayList GetPendingFileList()
+        {
+            ArrayList toReturn = new ArrayList();
+            foreach (String key in _pendingFiles.Keys)
+            {
+                toReturn.Add(_pendingFiles[key]);
+            }
+            return toReturn;
+        }
+
+        public int GetPendingFileCount()
+        {
+            return _pendingFiles.Count;
         }
 
         /// <summary>
