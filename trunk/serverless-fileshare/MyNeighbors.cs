@@ -15,6 +15,7 @@ namespace serverless_fileshare
         private const String _fileLoc = "MyNeighbors.dat";
         System.Windows.Forms.Timer _checkNeighbors = new System.Windows.Forms.Timer();
         OutboundManager _outbound;
+        String myIP;
         public MyNeighbors(MovingTCPScheduler scheduler)
         {
 
@@ -36,23 +37,26 @@ namespace serverless_fileshare
         /// <param name="e"></param>
         void _checkNeighbors_Tick(object sender, EventArgs e)
         {
-            
-            Random rand=new Random();
-            int maxValue = _listOfNeighbors.Count-1;
-            int maxCount = _listOfNeighbors.Count - 1;
-            if (_listOfNeighbors.Count > 10)
+            if (_listOfNeighbors.Count > 0)
             {
-                maxValue = _listOfNeighbors.Count - 11;
-                maxCount = 10;
-            }
-            int startLoc=rand.Next(maxValue);
-            if(startLoc+maxCount>_listOfNeighbors.Count)
-                maxCount=(_listOfNeighbors.Count-startLoc);
-            if (maxCount == 0 && _listOfNeighbors.Count != 0)
-                maxCount = 1;
-            foreach (Neighbor nb in _listOfNeighbors.GetRange(startLoc,maxCount))
-            {
-                _outbound.SendNeighborDownloadRequest(IPAddress.Parse(nb.IPAddress));
+                Random rand = new Random();
+                int maxValue = _listOfNeighbors.Count - 1;
+                int maxCount = _listOfNeighbors.Count - 1;
+                if (_listOfNeighbors.Count > 10)
+                {
+                    maxValue = _listOfNeighbors.Count - 11;
+                    maxCount = 10;
+                }
+
+                int startLoc = rand.Next(maxValue);
+                if (startLoc + maxCount > _listOfNeighbors.Count)
+                    maxCount = (_listOfNeighbors.Count - startLoc);
+                if (maxCount == 0 && _listOfNeighbors.Count != 0)
+                    maxCount = 1;
+                foreach (Neighbor nb in _listOfNeighbors.GetRange(startLoc, maxCount))
+                {
+                    _outbound.SendNeighborDownloadRequest(IPAddress.Parse(nb.IPAddress));
+                }
             }
         }
 
@@ -61,11 +65,30 @@ namespace serverless_fileshare
             IPAddress ip = IPAddress.Parse(IPAddressStr);
             Neighbor nb = new Neighbor();
             nb.IPAddress = IPAddressStr;
+            if (myIP == null)
+                myIP = GetLocalIP();
+            if (myIP == IPAddressStr.ToString())
+                return;
             if (!_listOfNeighbors.Contains(nb))
             {
                 _listOfNeighbors.Add(nb);
                 Save();
             }
+        }
+
+        private String GetLocalIP()
+        {
+            IPHostEntry host;
+            string localIP = "?";
+            host = Dns.GetHostEntry(Dns.GetHostName());
+            foreach (IPAddress ip in host.AddressList)
+            {
+                if (ip.AddressFamily.ToString() == "InterNetwork")
+                {
+                    localIP = ip.ToString();
+                }
+            }
+            return localIP;
         }
 
         public ArrayList GetListOfNeighbors()
