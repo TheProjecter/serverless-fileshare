@@ -45,6 +45,8 @@
             this.Source = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblDownloadsText = new System.Windows.Forms.Label();
             this.btnViewCompleted = new System.Windows.Forms.Button();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gvCurrentDownloads)).BeginInit();
             this.SuspendLayout();
@@ -62,7 +64,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fIleToolStripMenuItem});
+            this.fIleToolStripMenuItem,
+            this.editToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(709, 24);
@@ -200,6 +203,21 @@
             this.btnViewCompleted.Visible = false;
             this.btnViewCompleted.Click += new System.EventHandler(this.btnViewCompleted_Click);
             // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.settingsToolStripMenuItem});
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem.Text = "Settings";
+            this.settingsToolStripMenuItem.Click += new System.EventHandler(this.settingsToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -248,6 +266,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Source;
         private System.Windows.Forms.Label lblDownloadsText;
         private System.Windows.Forms.Button btnViewCompleted;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
 
     }
 }

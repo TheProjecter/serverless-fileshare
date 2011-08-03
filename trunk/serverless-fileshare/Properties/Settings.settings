@@ -8,14 +8,11 @@
     <Setting Name="PortChangeInterval" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="SaveDestination" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\TestLoc</Value>
-    </Setting>
     <Setting Name="PacketDataSize" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">5242880</Value>
     </Setting>
     <Setting Name="DownloadDirectory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Test\</Value>
+      <Value Profile="(Default)">C:\Download\</Value>
     </Setting>
   </Settings>
 </SettingsFile>
