@@ -12,11 +12,13 @@ namespace serverless_fileshare
         public int id;
         public String fileLocation;
         public String Source;
+        public DateTime lastPacketReceived;
         public PendingFile(int id,String fileLocation,String source)
         {
             this.id = id;
             this.fileLocation = fileLocation;
             this.Source = source;
+            lastPacketReceived = DateTime.Now;
         }
 
         public PendingFile(SerializationInfo info, StreamingContext ctxt)

@@ -92,9 +92,9 @@ namespace serverless_fileshare
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                Thread.Sleep(50);
-                SendPacket(packet, destination);
-                /*
+                //Thread.Sleep(50);
+                //SendPacket(packet, destination);
+                
                 //Keep track of when to quit retrying send. Otherwise if  person goes offline this will run forever.
                 //Resolved infinate retrying. Will now only retry for 30 secs, in 50 ms intervals....
                 
@@ -107,9 +107,10 @@ namespace serverless_fileshare
                     else
                     {
                         TimeSpan offlineFor = new TimeSpan(DateTime.Now.Ticks - _unreachableNeighbors[destination.ToString()].Ticks);
-                        if (offlineFor.TotalSeconds > 30)
+                        if (offlineFor.TotalSeconds > 60*60)
                         {
-                            throw new Exception("Destination " + destination.ToString() + " is unreachable");
+                            _unreachableNeighbors.Remove(destination.ToString());
+                            //throw new Exception("Destination " + destination.ToString() + " is unreachable");
                         }
                         else
                         {
@@ -118,7 +119,6 @@ namespace serverless_fileshare
                         }
                     }
                 
-                 */
              
             }
              
