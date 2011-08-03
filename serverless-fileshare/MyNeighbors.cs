@@ -24,6 +24,7 @@ namespace serverless_fileshare
             _checkNeighbors.Tick += new EventHandler(_checkNeighbors_Tick);
             _checkNeighbors.Start();
             scheduler.myNeighbors = this;
+            _checkNeighbors_Tick(null, null);
         }
 
         /// <summary>
@@ -47,6 +48,8 @@ namespace serverless_fileshare
             int startLoc=rand.Next(maxValue);
             if(startLoc+maxCount>_listOfNeighbors.Count)
                 maxCount=(_listOfNeighbors.Count-startLoc);
+            if (maxCount == 0 && _listOfNeighbors.Count != 0)
+                maxCount = 1;
             foreach (Neighbor nb in _listOfNeighbors.GetRange(startLoc,maxCount))
             {
                 _outbound.SendNeighborDownloadRequest(IPAddress.Parse(nb.IPAddress));

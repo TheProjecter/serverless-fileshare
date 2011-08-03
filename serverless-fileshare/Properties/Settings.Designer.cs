@@ -44,18 +44,6 @@ namespace serverless_fileshare.Properties {
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\TestLoc")]
-        public string SaveDestination {
-            get {
-                return ((string)(this["SaveDestination"]));
-            }
-            set {
-                this["SaveDestination"] = value;
-            }
-        }
-        
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("5242880")]
@@ -67,7 +55,7 @@ namespace serverless_fileshare.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Test\\")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Download\\")]
         public string DownloadDirectory {
             get {
                 return ((string)(this["DownloadDirectory"]));
