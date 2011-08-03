@@ -53,11 +53,23 @@ namespace serverless_fileshare
 
         public void SendPacket(SFPacket packet, IPAddress destination)
         {
-            object[] obj = { packet,destination };
-            ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadedPacketSend), obj);
-            Thread.Sleep(10);
+            SendPacket(packet, destination, 0);
         }
 
+        public void SendPacket(SFPacket packet, IPAddress destination, int tries)
+        {
+            object[] obj = { packet, destination,tries };
+            if (tries == 0)
+            {
+                ThreadPool.QueueUserWorkItem(new WaitCallback(ThreadedPacketSend), obj);
+                Thread.Sleep(10);
+            }
+            else
+            {
+                if (tries < 1000000) 
+                    ThreadedPacketSend(obj);
+            }
+        }
         private void ThreadedPacketSend(object parameters)
         {
             
@@ -65,6 +77,7 @@ namespace serverless_fileshare
             object[] parms = (object[])parameters;
             SFPacket packet = (SFPacket)parms[0];
             IPAddress destination =(IPAddress) parms[1];
+            int tries = (int)parms[2];
             try
             {
                 Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -92,33 +105,8 @@ namespace serverless_fileshare
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                //Thread.Sleep(50);
-                //SendPacket(packet, destination);
-                
-                //Keep track of when to quit retrying send. Otherwise if  person goes offline this will run forever.
-                //Resolved infinate retrying. Will now only retry for 30 secs, in 50 ms intervals....
-                
-                    if (!_unreachableNeighbors.ContainsKey(destination.ToString()))
-                    {
-                        _unreachableNeighbors.Add(destination.ToString(), DateTime.Now);
-                        Thread.Sleep(50);
-                        SendPacket(packet, destination);
-                    }
-                    else
-                    {
-                        TimeSpan offlineFor = new TimeSpan(DateTime.Now.Ticks - _unreachableNeighbors[destination.ToString()].Ticks);
-                        if (offlineFor.TotalSeconds > 60*60)
-                        {
-                            _unreachableNeighbors.Remove(destination.ToString());
-                            //throw new Exception("Destination " + destination.ToString() + " is unreachable");
-                        }
-                        else
-                        {
-                            Thread.Sleep(50);
-                            SendPacket(packet, destination);
-                        }
-                    }
-                
+                Thread.Sleep(50);
+                SendPacket(packet, destination,tries);
              
             }
              
