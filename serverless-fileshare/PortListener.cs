@@ -51,28 +51,32 @@ namespace serverless_fileshare
         }
         private void threadedStart()
         {
-            TcpListener _listener = new TcpListener(_localIp, _port);
-            _keepListening = true;
-            _listener.Start(100000);
-
-            Console.WriteLine("Starting server...\n");
-            Console.WriteLine("Listening on {0}:{1}...", _localIp, _port);
-
-            while (_keepListening)
+            try
             {
+                TcpListener _listener = new TcpListener(_localIp, _port);
+                _keepListening = true;
+                _listener.Start(100000);
 
-                //blocks until a client has connected to the server
-                TcpClient client = _listener.AcceptTcpClient();
+                Console.WriteLine("Starting server...\n");
+                Console.WriteLine("Listening on {0}:{1}...", _localIp, _port);
 
-                //create a thread to handle communication 
-                //with connected client
-                ProcessRequest(client);
-                //ThreadPool.QueueUserWorkItem(new WaitCallback(ProcessRequest), client);
-                //Thread clientThread = new Thread(new ParameterizedThreadStart(ProcessRequest));
-                //clientThread.Start(client);
+                while (_keepListening)
+                {
+
+                    //blocks until a client has connected to the server
+                    TcpClient client = _listener.AcceptTcpClient();
+
+                    //create a thread to handle communication 
+                    //with connected client
+                    ProcessRequest(client);
+                    //ThreadPool.QueueUserWorkItem(new WaitCallback(ProcessRequest), client);
+                    //Thread clientThread = new Thread(new ParameterizedThreadStart(ProcessRequest));
+                    //clientThread.Start(client);
+                }
+
+                _listener.Stop();
             }
-
-            _listener.Stop();
+            catch { }
         }
         public void Stop()
         {
