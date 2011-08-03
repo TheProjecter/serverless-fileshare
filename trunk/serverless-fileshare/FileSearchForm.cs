@@ -33,12 +33,10 @@ namespace serverless_fileshare
         private void btnSearch_Click(object sender, EventArgs e)
         {
             tvResults.Nodes.Clear();
-            System.Threading.ThreadStart ts = new System.Threading.ThreadStart(Search);
-            System.Threading.Thread thread = new System.Threading.Thread(ts);
-            thread.Start();
+            ThreadPool.QueueUserWorkItem(new WaitCallback(Search));
         }
 
-        private void Search()
+        private void Search(object asdf)
         {
 
             foreach (Neighbor nb in myNeighbors.GetListOfNeighbors())

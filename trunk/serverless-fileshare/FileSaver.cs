@@ -34,6 +34,9 @@ namespace serverless_fileshare
             {
                 if (data.Length > 10)
                 {
+                    PendingFile pFile = _pendingFileTransferDB.GetPendingWithID(fileID);
+                    if(pFile!=null)
+                        pFile.lastPacketReceived = DateTime.Now;
                     ((PendingFileQueue)pendingFileQueue[fileID]).AddPacket(data);
                 }
                 else

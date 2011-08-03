@@ -60,6 +60,7 @@ namespace serverless_fileshare
     
         public void AddPendingFile(PendingFile pFile)
         {
+            
             String key=pFile.id+pFile.Source;
             if(!_pendingFiles.Contains(key))
             _pendingFiles.Add(key, pFile);

@@ -27,6 +27,14 @@ namespace serverless_fileshare
             _fileID = fileID;
             _fileLoc = fileLoc;
             _queue = new Queue();
+            if (File.Exists(_fileLoc))
+            {
+                try
+                {
+                    File.Delete(_fileLoc);
+                }
+                catch { }
+            }
             AddPacket(firstPacket);
             ThreadStart ts = new ThreadStart(CycleThrough);
             _td = new Thread(ts);
