@@ -60,8 +60,14 @@ namespace serverless_fileshare
                 gvCurrentDownloads.Rows.Clear();
                 foreach (PendingFile pf in scheduler.fileTransferDB.GetPendingFileList())
                 {
-                    if (pf.lastPacketReceived.AddMinutes(15) < DateTime.Now)
-                        scheduler.outboundManager.SendFileDownloadRequest(pf.id,IPAddress.Parse(pf.Source));
+                    /*
+                     * ///Stupid... Dont do this if a computer goes offline for 2 hours then comes back it will be bombarded with requests...
+                    if (pf.lastPacketReceived.AddMinutes(15) < DateTime.Now && pf.lastRequestSent.AddMinutes(10))
+                    {
+                        pf.lastRequestSent = DateTime.Now;
+                        scheduler.outboundManager.SendFileDownloadRequest(pf.id, IPAddress.Parse(pf.Source));
+                    }
+                     */
                     DataGridViewRow row = new DataGridViewRow();
                     DataGridViewTextBoxCell cell = new DataGridViewTextBoxCell();
                     cell.Value = pf.fileLocation;
