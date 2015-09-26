@@ -1,0 +1,1 @@
+C# peer-to-peer file sharing application designed to run on a large LAN. Due to a constantly changing port number and serverless design the application is designed to be difficult to block by network admins
